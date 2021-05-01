@@ -30,6 +30,16 @@ public class Store {
     @OneToOne
     private Address address;
 
+    @ManyToMany
+    @JoinTable(
+            name = "store_product",
+            joinColumns = @JoinColumn(
+                    name = "store_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "product_id", referencedColumnName = "id"))
+    private Collection<Product> products;
+
+
     /*
     @ManyToMany
     @JoinTable(

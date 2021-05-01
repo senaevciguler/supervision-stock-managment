@@ -35,9 +35,15 @@ public class StoreServiceImpl implements StoreService {
         return storeRepository.findById(id).map(storeUpdated -> {
             storeUpdated.setName(store.getName());
             storeUpdated.setAddress(store.getAddress());
+            storeUpdated.setProducts(store.getProducts());
 
             return storeRepository.save(storeUpdated);
         });
+    }
+
+    @Override
+    public Store findByStoreName(String storeName) {
+        return storeRepository.findByStoreName(storeName);
     }
 
     @Override
