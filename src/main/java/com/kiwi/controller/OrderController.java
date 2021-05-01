@@ -1,8 +1,15 @@
 package com.kiwi.controller;
 
+import com.kiwi.dto.OrderPost;
 import com.kiwi.entities.Order;
+import com.kiwi.entities.Product;
+import com.kiwi.entities.Store;
 import com.kiwi.exception.NotFoundException;
+import com.kiwi.repositories.ProductRepository;
 import com.kiwi.services.implementation.OrderServiceImpl;
+import com.kiwi.services.implementation.ProductServiceImpl;
+import com.kiwi.services.implementation.StoreServiceImpl;
+import com.kiwi.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +40,12 @@ public class OrderController {
 
     @Autowired
     OrderServiceImpl orderService;
+
+    @Autowired
+    ProductServiceImpl productService;
+
+    @Autowired
+    StoreServiceImpl storeService;
 
     @Autowired
     MessageSource messageSource;
@@ -47,6 +61,7 @@ public class OrderController {
 
     }
 
+    /*
     @PostMapping("/order")
     ResponseEntity<Object> save(@RequestBody Order order){
         Order savedOrder = orderService.save(order);
@@ -55,6 +70,22 @@ public class OrderController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }*/
+
+    @PostMapping("/order")
+    public Result createOrder(@RequestBody OrderPost order) {
+        Order ordered = Order.builder()
+                .date(order.getDate())
+                .basket(order.getBasket())
+                .products((Collection<Product>) productService.findById(order.getProduct()))
+                .stores((Collection<Store>) storeService.findByStoreName(order.getStore()))
+                .build();
+
+        ordered = orderService.save(ordered);
+        return Result.Success.builder()
+                .message("Car saved successfully")
+                .payload(ordered)
+                .build();
     }
 
     @PutMapping("/order/{id}")

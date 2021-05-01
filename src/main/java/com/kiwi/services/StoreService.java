@@ -10,5 +10,6 @@ public interface StoreService {
     List<Store> findAll();
     Store findById(long id);
     Optional<Store> update(Store store, long id);
+    Store findByStoreName(String storeName);
     void delete(long id);
 }
