@@ -13,11 +13,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
 import javax.persistence.Table;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+
 
 @Builder
 @AllArgsConstructor
@@ -45,6 +45,7 @@ public class Order {
     private Collection<Product> products;
 
     @OneToOne
+    @JoinColumn(name = "basket_id")
     private Basket basket;
 
     @ManyToMany

@@ -5,7 +5,6 @@ import com.kiwi.entities.Order;
 import com.kiwi.entities.Product;
 import com.kiwi.entities.Store;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.repositories.ProductRepository;
 import com.kiwi.services.implementation.OrderServiceImpl;
 import com.kiwi.services.implementation.ProductServiceImpl;
 import com.kiwi.services.implementation.StoreServiceImpl;
