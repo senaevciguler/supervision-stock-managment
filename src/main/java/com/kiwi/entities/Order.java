@@ -19,14 +19,12 @@ import java.util.Collection;
 import java.util.Date;
 
 
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
-
 
     @Id
     @GeneratedValue
@@ -37,9 +35,9 @@ public class Order {
 
     @ManyToMany
     @JoinTable(
-            name = "order_product",
+            name = "orders_product",
             joinColumns = @JoinColumn(
-                    name = "order_id", referencedColumnName = "id"),
+                    name = "orders_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "product_id", referencedColumnName = "id"))
     private Collection<Product> products;
@@ -50,9 +48,9 @@ public class Order {
 
     @ManyToMany
     @JoinTable(
-            name = "order_store",
+            name = "orders_store",
             joinColumns = @JoinColumn(
-                    name = "order_id", referencedColumnName = "id"),
+                    name = "orders_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "store_id", referencedColumnName = "id"))
     private Collection<Store> stores;
