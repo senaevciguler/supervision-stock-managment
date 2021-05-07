@@ -46,6 +46,7 @@ public class User {
     private Address address;
 
     @OneToMany
+    @JoinColumn(name = "orders_id")
     private List<Order> orders;
 
     @ManyToOne

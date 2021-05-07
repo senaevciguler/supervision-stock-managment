@@ -5,7 +5,6 @@ import com.kiwi.entities.Order;
 import com.kiwi.entities.Product;
 import com.kiwi.entities.Store;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.repositories.ProductRepository;
 import com.kiwi.services.implementation.OrderServiceImpl;
 import com.kiwi.services.implementation.ProductServiceImpl;
 import com.kiwi.services.implementation.StoreServiceImpl;
@@ -61,7 +60,7 @@ public class OrderController {
 
     }
 
-    /*
+
     @PostMapping("/order")
     ResponseEntity<Object> save(@RequestBody Order order){
         Order savedOrder = orderService.save(order);
@@ -70,8 +69,9 @@ public class OrderController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
-    }*/
+    }
 
+    /*
     @PostMapping("/order")
     public Result createOrder(@RequestBody OrderPost order) {
         Order ordered = Order.builder()
@@ -86,7 +86,7 @@ public class OrderController {
                 .message("Car saved successfully")
                 .payload(ordered)
                 .build();
-    }
+    }*/
 
     @PutMapping("/order/{id}")
     ResponseEntity<Object> update(@RequestBody Order order, @PathVariable long id){

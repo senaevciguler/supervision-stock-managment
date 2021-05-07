@@ -13,20 +13,18 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
 import javax.persistence.Table;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
-@Builder
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
-
 
     @Id
     @GeneratedValue
@@ -37,21 +35,22 @@ public class Order {
 
     @ManyToMany
     @JoinTable(
-            name = "order_product",
+            name = "orders_product",
             joinColumns = @JoinColumn(
-                    name = "order_id", referencedColumnName = "id"),
+                    name = "orders_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "product_id", referencedColumnName = "id"))
     private Collection<Product> products;
 
     @OneToOne
+    @JoinColumn(name = "basket_id")
     private Basket basket;
 
     @ManyToMany
     @JoinTable(
-            name = "order_store",
+            name = "orders_store",
             joinColumns = @JoinColumn(
-                    name = "order_id", referencedColumnName = "id"),
+                    name = "orders_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "store_id", referencedColumnName = "id"))
     private Collection<Store> stores;
