@@ -60,4 +60,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(
                     name = "favourite_id", referencedColumnName = "id"))
     private Collection<Favourite> favourites;
+
+    @OneToOne
+    @JoinColumn(name = "basket_id")
+    private Basket basket;
 }

@@ -22,7 +22,9 @@ public class Basket {
     @GeneratedValue
     private Long id;
 
-    private Integer quantity;
+    private long quantity;
+
+
 
     /*
     @OneToMany

@@ -12,7 +12,7 @@
     <artifactId>kiwi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>kiwi</name>
-    <description>retail-supermarjet-project</description>
+    <description>retail-supermarket-project</description>
     <properties>
         <java.version>11</java.version>
     </properties>

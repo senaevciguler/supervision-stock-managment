@@ -17,18 +17,6 @@ public class  JwtTokenRequest implements Serializable {
         this.setUsername(username);
         this.setPassword(password);
     }
-    /*
-    {
-        "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzZW5hIiwiZXhwIjoxNTk2MzkzNDcxLCJpYXQiOjE1OTU3ODg2NzF9.4GujHe0nLUPkJO2
-        -HQXBnNjXnziuhbDvJQz8L8rRhKW2EYwn-SAtcubEhVJprjDHKcy89jLNOjI9fr2f2Sqilw"
-    }
-    {
-        refresh:"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzZW5hIiwiZXhwIjoxNTk2MzkzOTgzLCJpYXQiOjE1OTU3ODkxODN9.
-        SZ7udcoQLyFwIUSzhJecQWi6x1t4-si-BpPuHu6bJYTgstoVzFfZC9Mrc4jb2HcSE0fGlG7PYXTHZ9hFA4GxOA"
-}
-
-     */
-
 
     public String getUsername() {
         return this.username;

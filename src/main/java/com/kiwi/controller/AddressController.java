@@ -27,7 +27,7 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="")
+@CrossOrigin(origins="http://localhost:4200")
 @RequestMapping("/api/v1")
 public class AddressController {
 
