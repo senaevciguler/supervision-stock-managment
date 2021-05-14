@@ -27,7 +27,7 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1")
 public class CategoryController {
 
@@ -38,13 +38,17 @@ public class CategoryController {
     MessageSource messageSource;
 
     @GetMapping("/category")
-    public List<Category> findAll(){return categoryService.findAll();}
+    public List<Category> findAll() {
+        return categoryService.findAll();
+    }
 
     @GetMapping("/category/{id}")
-    public Category findById(@PathVariable long id){return categoryService.findById(id);}
+    public Category findById(@PathVariable long id) {
+        return categoryService.findById(id);
+    }
 
     @PostMapping("/category")
-    ResponseEntity<Object> save(@RequestBody Category category){
+    ResponseEntity<Object> save(@RequestBody Category category) {
         Category savedCategory = categoryService.save(category);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCategory.getId())
@@ -54,10 +58,10 @@ public class CategoryController {
     }
 
     @PutMapping("/category/{id}")
-    public ResponseEntity<Object> updateBasket(@PathVariable long id, @RequestBody Category category){
+    public ResponseEntity<Object> updateBasket(@PathVariable long id, @RequestBody Category category) {
         Optional<Category> categoryOptional = Optional.ofNullable(categoryService.findById(id));
 
-        if(!categoryOptional.isPresent()) {
+        if (!categoryOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -68,12 +72,11 @@ public class CategoryController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCategory.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build(); }
-
-    @DeleteMapping("/category/{id}")
-
-    public void delete(@PathVariable long id){
-        categoryService.delete(id);
+        return ResponseEntity.created(location).build();
     }
 
+    @DeleteMapping("/category/{id}")
+    public void delete(@PathVariable long id) {
+        categoryService.delete(id);
+    }
 }

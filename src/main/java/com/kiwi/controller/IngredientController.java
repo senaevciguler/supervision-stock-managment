@@ -1,6 +1,5 @@
 package com.kiwi.controller;
 
-
 import com.kiwi.entities.Ingredient;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.implementation.IngredientServiceImpl;
@@ -28,7 +27,7 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1")
 public class IngredientController {
 
@@ -39,18 +38,18 @@ public class IngredientController {
     MessageSource messageSource;
 
     @GetMapping("/ingredient")
-    public List<Ingredient> findALl(){
+    public List<Ingredient> findALl() {
         return ingredientService.findAll();
     }
 
     @GetMapping("/ingredient/{id}")
-    public Ingredient findById(@PathVariable long id){
+    public Ingredient findById(@PathVariable long id) {
         return ingredientService.findById(id);
 
     }
 
     @PostMapping("/ingredient")
-    ResponseEntity<Object> save(@RequestBody Ingredient ingredient){
+    ResponseEntity<Object> save(@RequestBody Ingredient ingredient) {
         Ingredient savedIngredient = ingredientService.save(ingredient);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedIngredient.getId())
@@ -60,10 +59,10 @@ public class IngredientController {
     }
 
     @PutMapping("/ingredient/{id}")
-    ResponseEntity<Object> update(@RequestBody Ingredient ingredient, @PathVariable long id){
+    ResponseEntity<Object> update(@RequestBody Ingredient ingredient, @PathVariable long id) {
         Optional<Ingredient> ingredientOptional = Optional.ofNullable(ingredientService.findById(id));
 
-        if(!ingredientOptional.isPresent()) {
+        if (!ingredientOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -78,8 +77,7 @@ public class IngredientController {
     }
 
     @DeleteMapping("/ingredient/{id}")
-
-    public void deleteById(@PathVariable long id){
+    public void deleteById(@PathVariable long id) {
         ingredientService.delete(id);
     }
 }

@@ -37,6 +37,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(long id) {
-
+        //TODO write delete method
     }
 }

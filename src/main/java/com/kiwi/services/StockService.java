@@ -8,8 +8,12 @@ import java.util.Optional;
 public interface StockService {
 
     Stock save(Stock stock);
+
     List<Stock> findAll();
+
     Stock findById(long id);
+
     Optional<Stock> update(Stock stock, long id);
+
     void delete(long id);
 }

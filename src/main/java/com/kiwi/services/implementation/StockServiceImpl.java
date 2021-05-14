@@ -1,6 +1,5 @@
 package com.kiwi.services.implementation;
 
-
 import com.kiwi.entities.Stock;
 import com.kiwi.repositories.StockRepository;
 import com.kiwi.services.StockService;
@@ -33,7 +32,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Optional<Stock> update(Stock stock, long id) {
-        return stockRepository.findById(id).map(stockUpdated ->{
+        return stockRepository.findById(id).map(stockUpdated -> {
             stockUpdated.setName(stock.getName());
             stockUpdated.setProducts(stock.getProducts());
             stockUpdated.setQuantity(stock.getQuantity());
@@ -45,6 +44,5 @@ public class StockServiceImpl implements StockService {
     @Override
     public void delete(long id) {
         stockRepository.deleteById(id);
-
     }
 }

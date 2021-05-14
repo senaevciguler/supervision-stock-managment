@@ -27,7 +27,7 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/v1")
 public class FavouriteController {
 
@@ -38,19 +38,19 @@ public class FavouriteController {
     MessageSource messageSource;
 
     @GetMapping("/favourite")
-    public List<Favourite> findALl(){
+    public List<Favourite> findALl() {
         return favouriteService.findAll();
     }
 
     @GetMapping("/favourite/{id}")
-    public Favourite findById(@PathVariable long id){
+    public Favourite findById(@PathVariable long id) {
         return favouriteService.findById(id);
 
     }
 
     @PostMapping("/favourite")
-    ResponseEntity<Object> save(@RequestBody Favourite favourite){
-       Favourite savedFavourite = favouriteService.save(favourite);
+    ResponseEntity<Object> save(@RequestBody Favourite favourite) {
+        Favourite savedFavourite = favouriteService.save(favourite);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedFavourite.getId())
                 .toUri();
@@ -59,11 +59,10 @@ public class FavouriteController {
     }
 
     @PutMapping("/favourite/{id}")
-
-    ResponseEntity<Object> update(@RequestBody Favourite favourite, @PathVariable long id){
+    ResponseEntity<Object> update(@RequestBody Favourite favourite, @PathVariable long id) {
         Optional<Favourite> favouriteOptional = Optional.ofNullable(favouriteService.findById(id));
 
-        if(!favouriteOptional.isPresent()) {
+        if (!favouriteOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -78,9 +77,7 @@ public class FavouriteController {
     }
 
     @DeleteMapping("/favourite/{id}")
-
-    public void deleteById(@PathVariable long id){
+    public void deleteById(@PathVariable long id) {
         favouriteService.delete(id);
     }
-
 }

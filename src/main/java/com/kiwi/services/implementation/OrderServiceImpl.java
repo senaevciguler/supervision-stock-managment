@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<Order> update(Order order, long id) {
-        return orderRepository.findById(id).map(orderUpdated ->{
+        return orderRepository.findById(id).map(orderUpdated -> {
             orderUpdated.setDate(order.getDate());
 
             return orderRepository.save(orderUpdated);
@@ -40,5 +40,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void delete(long id) {orderRepository.deleteById(id);}
+    public void delete(long id) {
+        orderRepository.deleteById(id);
+    }
 }

@@ -27,7 +27,7 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/v1")
 public class RoleController {
 
@@ -38,18 +38,18 @@ public class RoleController {
     MessageSource messageSource;
 
     @GetMapping("/role")
-    public List<Role> findALl(){
+    public List<Role> findALl() {
         return roleService.findAll();
     }
 
     @GetMapping("/role/{id}")
-    public Role findById(@PathVariable long id){
+    public Role findById(@PathVariable long id) {
         return roleService.findById(id);
 
     }
 
     @PostMapping("/role")
-    ResponseEntity<Object> save(@RequestBody Role role){
+    ResponseEntity<Object> save(@RequestBody Role role) {
         Role savedRole = roleService.save(role);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedRole.getId())
@@ -59,10 +59,10 @@ public class RoleController {
     }
 
     @PutMapping("/role/{id}")
-    ResponseEntity<Object> update(@RequestBody Role role, @PathVariable long id){
+    ResponseEntity<Object> update(@RequestBody Role role, @PathVariable long id) {
         Optional<Role> roleOptional = Optional.ofNullable(roleService.findById(id));
 
-        if(!roleOptional.isPresent()) {
+        if (!roleOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -77,9 +77,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/role/{id}")
-
-    public void deleteById(@PathVariable long id){
+    public void deleteById(@PathVariable long id) {
         roleService.delete(id);
     }
-
 }

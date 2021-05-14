@@ -1,10 +1,7 @@
 package com.kiwi.controller;
 
-
-import com.kiwi.entities.Address;
 import com.kiwi.entities.Stock;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.AddressServiceImpl;
 import com.kiwi.services.implementation.StockServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -30,10 +27,9 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1")
 public class StockController {
-
 
     @Autowired
     private StockServiceImpl stockService;
@@ -42,10 +38,12 @@ public class StockController {
     private MessageSource messageSource;
 
     @GetMapping("/stock")
-    public List<Stock> findAll(){return stockService.findAll();}
+    public List<Stock> findAll() {
+        return stockService.findAll();
+    }
 
     @PostMapping("/stock")
-    public ResponseEntity<Object> save( @RequestBody Stock stock){
+    public ResponseEntity<Object> save(@RequestBody Stock stock) {
         Stock savedStock = stockService.save(stock);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -55,14 +53,17 @@ public class StockController {
         return ResponseEntity.created(location).build();
 
     }
+
     @GetMapping("/stock/{id}")
-    public Stock findById(@PathVariable long id){return stockService.findById(id);}
+    public Stock findById(@PathVariable long id) {
+        return stockService.findById(id);
+    }
 
     @PutMapping("/stock/{id}")
-    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Stock stock){
+    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Stock stock) {
         Optional<Stock> stockOptional = Optional.ofNullable(stockService.findById(id));
 
-        if(!stockOptional.isPresent()) {
+        if (!stockOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -74,9 +75,11 @@ public class StockController {
                 .buildAndExpand(savedStock.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build(); }
+        return ResponseEntity.created(location).build();
+    }
 
     @DeleteMapping("/stock/{id}")
-
-    public void deleteById(@PathVariable long id){ stockService.delete(id);}
+    public void deleteById(@PathVariable long id) {
+        stockService.delete(id);
+    }
 }

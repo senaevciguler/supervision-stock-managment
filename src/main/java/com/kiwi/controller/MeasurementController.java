@@ -1,6 +1,5 @@
 package com.kiwi.controller;
 
-
 import com.kiwi.entities.Measurement;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.implementation.MeasurementServiceImpl;
@@ -28,7 +27,7 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1")
 public class MeasurementController {
     @Autowired
@@ -38,18 +37,18 @@ public class MeasurementController {
     MessageSource messageSource;
 
     @GetMapping("/measurement")
-    public List<Measurement> findALl(){
+    public List<Measurement> findALl() {
         return measurementService.findAll();
     }
 
     @GetMapping("/measurement/{id}")
-    public Measurement findById(@PathVariable long id){
+    public Measurement findById(@PathVariable long id) {
         return measurementService.findById(id);
 
     }
 
     @PostMapping("/measurement")
-    ResponseEntity<Object> save(@RequestBody Measurement measurement){
+    ResponseEntity<Object> save(@RequestBody Measurement measurement) {
         Measurement savedMeasurement = measurementService.save(measurement);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedMeasurement.getId())
@@ -59,10 +58,10 @@ public class MeasurementController {
     }
 
     @PutMapping("/measurement/{id}")
-    ResponseEntity<Object> update(@RequestBody Measurement measurement, @PathVariable long id){
+    ResponseEntity<Object> update(@RequestBody Measurement measurement, @PathVariable long id) {
         Optional<Measurement> measurementOptional = Optional.ofNullable(measurementService.findById(id));
 
-        if(!measurementOptional.isPresent()) {
+        if (!measurementOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -77,8 +76,7 @@ public class MeasurementController {
     }
 
     @DeleteMapping("/measurement/{id}")
-
-    public void deleteById(@PathVariable long id){
+    public void deleteById(@PathVariable long id) {
         measurementService.delete(id);
     }
 }

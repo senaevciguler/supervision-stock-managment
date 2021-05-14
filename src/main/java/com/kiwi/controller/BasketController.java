@@ -27,7 +27,7 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1")
 public class BasketController {
 
@@ -38,13 +38,17 @@ public class BasketController {
     MessageSource messageSource;
 
     @GetMapping("/basket")
-    public List<Basket> findAll(){return basketService.findAll();}
+    public List<Basket> findAll() {
+        return basketService.findAll();
+    }
 
     @GetMapping("/basket/{id}")
-    public Basket findById(@PathVariable long id){return basketService.findById(id);}
+    public Basket findById(@PathVariable long id) {
+        return basketService.findById(id);
+    }
 
     @PostMapping("/basket")
-    ResponseEntity<Object> save(@RequestBody Basket basket){
+    ResponseEntity<Object> save(@RequestBody Basket basket) {
         Basket savedBasket = basketService.save(basket);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedBasket.getId())
@@ -54,10 +58,10 @@ public class BasketController {
     }
 
     @PutMapping("/basket/{id}")
-    public ResponseEntity<Object> updateBasket(@PathVariable long id, @RequestBody Basket basket){
+    public ResponseEntity<Object> updateBasket(@PathVariable long id, @RequestBody Basket basket) {
         Optional<Basket> basketOptional = Optional.ofNullable(basketService.findById(id));
 
-        if(!basketOptional.isPresent()) {
+        if (!basketOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -68,12 +72,11 @@ public class BasketController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedBasket.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build(); }
-
-    @DeleteMapping("/basket/{id}")
-
-    public void delete(@PathVariable long id){
-        basketService.delete(id);
+        return ResponseEntity.created(location).build();
     }
 
+    @DeleteMapping("/basket/{id}")
+    public void delete(@PathVariable long id) {
+        basketService.delete(id);
+    }
 }

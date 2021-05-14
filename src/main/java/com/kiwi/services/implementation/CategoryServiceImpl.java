@@ -32,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Optional<Category> update(Category category, long id) {
-        return categoryRepository.findById(id).map(categoryUpdated ->{
+        return categoryRepository.findById(id).map(categoryUpdated -> {
             categoryUpdated.setName(category.getName());
 
             return categoryRepository.save(categoryUpdated);
@@ -42,6 +42,5 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(long id) {
         categoryRepository.deleteById(id);
-
     }
 }

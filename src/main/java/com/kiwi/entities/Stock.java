@@ -37,5 +37,4 @@ public class Stock {
                     name = "product_id", referencedColumnName = "id"))
     private Collection<Product> products;
 
-
 }

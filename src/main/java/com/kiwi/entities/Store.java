@@ -39,16 +39,4 @@ public class Store {
                     name = "product_id", referencedColumnName = "id"))
     private Collection<Product> products;
 
-
-    /*
-    @ManyToMany
-    @JoinTable(
-            name = "store_stock",
-            joinColumns = @JoinColumn(
-                    name = "store_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "stock_id", referencedColumnName = "id"))
-    private Collection<Stock> stocks;*/
-
-
 }

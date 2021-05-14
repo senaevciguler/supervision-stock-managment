@@ -32,7 +32,7 @@ public class MeasurementServiceImpl implements MeasurementService {
 
     @Override
     public Optional<Measurement> update(Measurement measurement, long id) {
-        return measurementRepository.findById(id).map(measurementUpdated ->{
+        return measurementRepository.findById(id).map(measurementUpdated -> {
             measurementUpdated.setName(measurement.getName());
 
             return measurementRepository.save(measurementUpdated);
@@ -41,7 +41,6 @@ public class MeasurementServiceImpl implements MeasurementService {
 
     @Override
     public void delete(long id) {
-
         measurementRepository.deleteById(id);
     }
 }

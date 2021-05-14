@@ -17,12 +17,11 @@ import javax.persistence.Table;
 import java.util.Collection;
 import java.util.List;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User {
 
     @Id

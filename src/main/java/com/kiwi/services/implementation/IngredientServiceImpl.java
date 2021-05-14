@@ -15,7 +15,6 @@ public class IngredientServiceImpl implements IngredientService {
     @Autowired
     IngredientRepository ingredientRepository;
 
-
     @Override
     public Ingredient save(Ingredient ingredient) {
         return ingredientRepository.save(ingredient);
@@ -33,7 +32,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Optional<Ingredient> update(Ingredient ingredient, long id) {
-        return ingredientRepository.findById(id).map(ingredientUpdate ->{
+        return ingredientRepository.findById(id).map(ingredientUpdate -> {
             ingredientUpdate.setName(ingredient.getName());
 
             return ingredientRepository.save(ingredientUpdate);
@@ -42,7 +41,6 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void delete(long id) {
-
         ingredientRepository.deleteById(id);
     }
 }

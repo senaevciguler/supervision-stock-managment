@@ -1,14 +1,10 @@
 package com.kiwi.controller;
 
-import com.kiwi.dto.OrderPost;
 import com.kiwi.entities.Order;
-import com.kiwi.entities.Product;
-import com.kiwi.entities.Store;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.implementation.OrderServiceImpl;
 import com.kiwi.services.implementation.ProductServiceImpl;
 import com.kiwi.services.implementation.StoreServiceImpl;
-import com.kiwi.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -27,17 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/v1")
 public class OrderController {
-
 
     @Autowired
     OrderServiceImpl orderService;
@@ -52,19 +46,19 @@ public class OrderController {
     MessageSource messageSource;
 
     @GetMapping("/order")
-    public List<Order> findALl(){
+    public List<Order> findALl() {
         return orderService.findAll();
     }
 
     @GetMapping("/order/{id}")
-    public Order findById(@PathVariable long id){
+    public Order findById(@PathVariable long id) {
         return orderService.findById(id);
 
     }
 
 
     @PostMapping("/order")
-    ResponseEntity<Object> save(@RequestBody Order order){
+    ResponseEntity<Object> save(@RequestBody Order order) {
         Order savedOrder = orderService.save(order);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedOrder.getId())
@@ -91,10 +85,10 @@ public class OrderController {
     }*/
 
     @PutMapping("/order/{id}")
-    ResponseEntity<Object> update(@RequestBody Order order, @PathVariable long id){
+    ResponseEntity<Object> update(@RequestBody Order order, @PathVariable long id) {
         Optional<Order> orderOptional = Optional.ofNullable(orderService.findById(id));
 
-        if(!orderOptional.isPresent()) {
+        if (!orderOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -109,9 +103,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/order/{id}")
-
-    public void deleteById(@PathVariable long id){
+    public void deleteById(@PathVariable long id) {
         orderService.delete(id);
     }
-
 }

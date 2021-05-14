@@ -15,7 +15,8 @@ public abstract class Result {
     Object payload;
     List<String> messageCodes = new ArrayList<>();
 
-    Result() { }
+    Result() {
+    }
 
     <T extends Result> T setMessage(String message) {
         this.message = message;
@@ -31,6 +32,7 @@ public abstract class Result {
             this.message = message;
             this.payload = payload;
         }
+
         @Override
         public boolean isSuccess() {
             return true;
@@ -48,6 +50,7 @@ public abstract class Result {
             this.message = message;
             this.payload = payload;
         }
+
         @Override
         public boolean isSuccess() {
             return false;

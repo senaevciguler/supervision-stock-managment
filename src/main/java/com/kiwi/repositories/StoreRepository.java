@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StoreRepository extends JpaRepository<Store,Long> {
+public interface StoreRepository extends JpaRepository<Store, Long> {
     @Query("SELECT t FROM Store t WHERE t.name = ?1")
     Store findByStoreName(String storeName);
 }

@@ -43,6 +43,8 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public void deleteById(long id) {addressRepository.deleteById(id);}
+    public void deleteById(long id) {
+        addressRepository.deleteById(id);
+    }
 }
 

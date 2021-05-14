@@ -1,9 +1,7 @@
 package com.kiwi.controller;
 
-import com.kiwi.entities.Basket;
 import com.kiwi.entities.Store;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.BasketServiceImpl;
 import com.kiwi.services.implementation.StoreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -29,10 +27,9 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1")
 public class StoreController {
-
 
     @Autowired
     StoreServiceImpl storeService;
@@ -41,13 +38,17 @@ public class StoreController {
     MessageSource messageSource;
 
     @GetMapping("/store")
-    public List<Store> findAll(){return storeService.findAll();}
+    public List<Store> findAll() {
+        return storeService.findAll();
+    }
 
     @GetMapping("/store/{id}")
-    public Store findById(@PathVariable long id){return storeService.findById(id);}
+    public Store findById(@PathVariable long id) {
+        return storeService.findById(id);
+    }
 
     @PostMapping("/store")
-    ResponseEntity<Object> save(@RequestBody Store store){
+    ResponseEntity<Object> save(@RequestBody Store store) {
         Store savedStore = storeService.save(store);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -58,10 +59,10 @@ public class StoreController {
     }
 
     @PutMapping("/store/{id}")
-    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Store store){
+    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Store store) {
         Optional<Store> storeOptional = Optional.ofNullable(storeService.findById(id));
 
-        if(!storeOptional.isPresent()) {
+        if (!storeOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -73,11 +74,11 @@ public class StoreController {
                 .buildAndExpand(savedStore.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build(); }
+        return ResponseEntity.created(location).build();
+    }
 
     @DeleteMapping("/store/{id}")
-
-    public void delete(@PathVariable long id){
+    public void delete(@PathVariable long id) {
         storeService.delete(id);
     }
 }

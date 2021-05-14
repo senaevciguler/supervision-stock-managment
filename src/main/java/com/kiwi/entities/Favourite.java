@@ -23,7 +23,4 @@ public class Favourite {
 
     @ManyToOne
     private Product product;
-
-
-
 }

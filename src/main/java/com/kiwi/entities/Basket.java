@@ -7,15 +7,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name="basket")
+@Table(name = "basket")
 public class Basket {
 
     @Id
@@ -23,15 +21,5 @@ public class Basket {
     private Long id;
 
     private long quantity;
-
-
-
-    /*
-    @OneToMany
-    private List<Product> products;*/
-
-    /*
-    @OneToOne
-    private User user;*/
 
 }

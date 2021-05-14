@@ -20,15 +20,10 @@ public class BasketServiceImpl implements BasketService {
     private BasketRepository basketRepository;
 
     @Override
-    /*
     public Basket save(Basket basket) {
-        return basketRepository.save(basket);
-    }*/
-
-    public Basket save(Basket basket){
-        if(basket.getQuantity()==-1 || basket.getQuantity() == 0){
+        if (basket.getQuantity() == -1 || basket.getQuantity() == 0) {
             basket.setId(++quantityCounter);
-        }else{
+        } else {
             delete(basket.getQuantity());
         }
         baskets.add(basket);
@@ -58,9 +53,6 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public void delete(long id) {
         basketRepository.deleteById(id);
-
     }
-
-
 
 }

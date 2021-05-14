@@ -1,6 +1,5 @@
 package com.kiwi.controller;
 
-
 import com.kiwi.entities.Product;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.implementation.ProductServiceImpl;
@@ -31,7 +30,7 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1")
 public class ProductController {
 
@@ -42,10 +41,12 @@ public class ProductController {
     private MessageSource messageSource;
 
     @GetMapping("/product")
-    public List<Product> getAll(){return productService.findAll();}
+    public List<Product> getAll() {
+        return productService.findAll();
+    }
 
     @PostMapping("/product")
-    public ResponseEntity<Object> save( @RequestBody Product product){
+    public ResponseEntity<Object> save(@RequestBody Product product) {
         Product savedProduct = productService.save(product);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -58,7 +59,7 @@ public class ProductController {
 
 
     @PostMapping("/product/image/{id}")
-    public ResponseEntity<Object> createImage(@PathVariable long id,  @ModelAttribute MultipartFile file) throws IOException {
+    public ResponseEntity<Object> createImage(@PathVariable long id, @ModelAttribute MultipartFile file) throws IOException {
         Product product = productService.findById(id);
         product.setPhoto(file.getBytes());
 
@@ -73,13 +74,15 @@ public class ProductController {
 
 
     @GetMapping("/product/{id}")
-    public Product getById(@PathVariable long id){return productService.findById(id);}
+    public Product getById(@PathVariable long id) {
+        return productService.findById(id);
+    }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Product product){
+    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Product product) {
         Optional<Product> productOptional = Optional.ofNullable(productService.findById(id));
 
-        if(!productOptional.isPresent()) {
+        if (!productOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -90,10 +93,11 @@ public class ProductController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedProduct.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build(); }
+        return ResponseEntity.created(location).build();
+    }
 
     @DeleteMapping("/product/{id}")
-
-    public void delete(@PathVariable long id){ productService.deleteById(id);}
-
+    public void delete(@PathVariable long id) {
+        productService.deleteById(id);
+    }
 }

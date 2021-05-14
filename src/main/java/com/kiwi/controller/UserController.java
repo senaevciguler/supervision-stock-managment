@@ -1,6 +1,5 @@
 package com.kiwi.controller;
 
-import com.kiwi.entities.Role;
 import com.kiwi.entities.User;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.implementation.UserServiceImpl;
@@ -25,11 +24,10 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-
 @Configuration
 @EnableWebSecurity
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/v1")
 public class UserController {
 
@@ -39,31 +37,32 @@ public class UserController {
     @Autowired
     MessageSource messageSource;
 
-   @GetMapping("/user")
-    public List<User> findAll(){
-       return userService.findAll();
-   }
+    @GetMapping("/user")
+    public List<User> findAll() {
+        return userService.findAll();
+    }
 
-   @GetMapping("/user/{id}")
-    public User findById(@PathVariable long id){
-       return userService.findById(id);
-   }
-   @PostMapping("/user")
-    ResponseEntity<Object> save(@RequestBody User user){
-       User savedUser = userService.save(user);
+    @GetMapping("/user/{id}")
+    public User findById(@PathVariable long id) {
+        return userService.findById(id);
+    }
 
-       URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
-               .toUri();
+    @PostMapping("/user")
+    ResponseEntity<Object> save(@RequestBody User user) {
+        User savedUser = userService.save(user);
 
-       return ResponseEntity.created(location).build();
-   }
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+    }
 
 
     @PutMapping("/user/{id}")
-    ResponseEntity<Object> update(@RequestBody User user, @PathVariable long id){
+    ResponseEntity<Object> update(@RequestBody User user, @PathVariable long id) {
         Optional<User> userOptional = Optional.ofNullable(userService.findById(id));
 
-        if(!userOptional.isPresent()) {
+        if (!userOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
@@ -78,10 +77,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
-
-    public void deleteById(@PathVariable long id){
+    public void deleteById(@PathVariable long id) {
         userService.delete(id);
     }
-
-
 }

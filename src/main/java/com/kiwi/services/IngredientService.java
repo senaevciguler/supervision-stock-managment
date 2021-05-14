@@ -8,8 +8,12 @@ import java.util.Optional;
 public interface IngredientService {
 
     Ingredient save(Ingredient ingredient);
+
     List<Ingredient> findAll();
+
     Ingredient findById(long id);
+
     Optional<Ingredient> update(Ingredient ingredient, long id);
+
     void delete(long id);
 }
