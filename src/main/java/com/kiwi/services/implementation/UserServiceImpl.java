@@ -32,11 +32,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> update(User user, long id) {
-        return Optional.empty();
+        return userRepository.findById(id).map(userUpdated ->{
+            userUpdated.setAddress(user.getAddress());
+            userUpdated.setEmail(user.getEmail());
+            userUpdated.setFavourites(user.getFavourites());
+            userUpdated.setFirstName(user.getFirstName());
+            userUpdated.setUsername(user.getUsername());
+            userUpdated.setLastName(user.getLastName());
+            userUpdated.setOrders(user.getOrders());
+            userUpdated.setPassword(user.getPassword());
+            userUpdated.setRole(user.getRole());
+
+            return  userRepository.save(userUpdated);
+        });
     }
 
     @Override
     public void delete(long id) {
-        //TODO write delete method
+       userRepository.deleteById(id);
     }
 }

@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.User;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.UserServiceImpl;
+import com.kiwi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
     @Autowired
     MessageSource messageSource;

@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Role;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.RoleServiceImpl;
+import com.kiwi.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class RoleController {
 
     @Autowired
-    RoleServiceImpl roleService;
+    RoleService roleService;
 
     @Autowired
     MessageSource messageSource;

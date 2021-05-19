@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Stock;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.StockServiceImpl;
+import com.kiwi.services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class StockController {
 
     @Autowired
-    private StockServiceImpl stockService;
+    private StockService stockService;
 
     @Autowired
     private MessageSource messageSource;

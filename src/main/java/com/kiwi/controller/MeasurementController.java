@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Measurement;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.MeasurementServiceImpl;
+import com.kiwi.services.MeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1")
 public class MeasurementController {
     @Autowired
-    MeasurementServiceImpl measurementService;
+    MeasurementService measurementService;
 
     @Autowired
     MessageSource messageSource;

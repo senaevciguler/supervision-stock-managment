@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Favourite;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.FavouriteServiceImpl;
+import com.kiwi.services.FavouriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class FavouriteController {
 
     @Autowired
-    FavouriteServiceImpl favouriteService;
+    FavouriteService favouriteService;
 
     @Autowired
     MessageSource messageSource;

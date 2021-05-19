@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Basket;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.BasketServiceImpl;
+import com.kiwi.services.BasketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class BasketController {
 
     @Autowired
-    BasketServiceImpl basketService;
+    BasketService basketService;
 
     @Autowired
     MessageSource messageSource;

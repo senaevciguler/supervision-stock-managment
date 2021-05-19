@@ -2,9 +2,9 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Order;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.OrderServiceImpl;
-import com.kiwi.services.implementation.ProductServiceImpl;
-import com.kiwi.services.implementation.StoreServiceImpl;
+import com.kiwi.services.OrderService;
+import com.kiwi.services.ProductService;
+import com.kiwi.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -34,13 +34,13 @@ import java.util.Optional;
 public class OrderController {
 
     @Autowired
-    OrderServiceImpl orderService;
+    OrderService orderService;
 
     @Autowired
-    ProductServiceImpl productService;
+    ProductService productService;
 
     @Autowired
-    StoreServiceImpl storeService;
+    StoreService storeService;
 
     @Autowired
     MessageSource messageSource;
@@ -66,23 +66,6 @@ public class OrderController {
 
         return ResponseEntity.created(location).build();
     }
-
-    /*
-    @PostMapping("/order")
-    public Result createOrder(@RequestBody OrderPost order) {
-        Order ordered = Order.builder()
-                .date(order.getDate())
-                .basket(order.getBasket())
-                .products((Collection<Product>) productService.findById(order.getProduct()))
-                .stores((Collection<Store>) storeService.findByStoreName(order.getStore()))
-                .build();
-
-        ordered = orderService.save(ordered);
-        return Result.Success.builder()
-                .message("Car saved successfully")
-                .payload(ordered)
-                .build();
-    }*/
 
     @PutMapping("/order/{id}")
     ResponseEntity<Object> update(@RequestBody Order order, @PathVariable long id) {

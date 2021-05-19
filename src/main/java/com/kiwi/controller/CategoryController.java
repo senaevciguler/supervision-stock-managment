@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Category;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.CategoryServiceImpl;
+import com.kiwi.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class CategoryController {
 
     @Autowired
-    CategoryServiceImpl categoryService;
+    CategoryService categoryService;
 
     @Autowired
     MessageSource messageSource;

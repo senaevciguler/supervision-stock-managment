@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Address;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.AddressServiceImpl;
+import com.kiwi.services.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class AddressController {
 
     @Autowired
-    private AddressServiceImpl addressService;
+    private AddressService addressService;
 
     @Autowired
     private MessageSource messageSource;

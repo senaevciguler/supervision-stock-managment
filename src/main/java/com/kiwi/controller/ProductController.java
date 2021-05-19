@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Product;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.ProductServiceImpl;
+import com.kiwi.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +35,7 @@ import java.util.Optional;
 public class ProductController {
 
     @Autowired
-    private ProductServiceImpl productService;
+    private ProductService productService;
 
     @Autowired
     private MessageSource messageSource;
@@ -99,5 +99,6 @@ public class ProductController {
     @DeleteMapping("/product/{id}")
     public void delete(@PathVariable long id) {
         productService.deleteById(id);
+
     }
 }

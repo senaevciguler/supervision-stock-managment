@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Store;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.StoreServiceImpl;
+import com.kiwi.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class StoreController {
 
     @Autowired
-    StoreServiceImpl storeService;
+    StoreService storeService;
 
     @Autowired
     MessageSource messageSource;

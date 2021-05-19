@@ -2,7 +2,7 @@ package com.kiwi.controller;
 
 import com.kiwi.entities.Ingredient;
 import com.kiwi.exception.NotFoundException;
-import com.kiwi.services.implementation.IngredientServiceImpl;
+import com.kiwi.services.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class IngredientController {
 
     @Autowired
-    IngredientServiceImpl ingredientService;
+    IngredientService ingredientService;
 
     @Autowired
     MessageSource messageSource;
