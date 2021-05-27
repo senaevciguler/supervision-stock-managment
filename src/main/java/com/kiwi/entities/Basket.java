@@ -22,7 +22,7 @@ import javax.validation.constraints.PositiveOrZero;
 public class Basket {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @PositiveOrZero

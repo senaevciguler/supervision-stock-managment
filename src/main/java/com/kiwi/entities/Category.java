@@ -22,7 +22,7 @@ import javax.validation.constraints.NotBlank;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @NotBlank

@@ -21,7 +21,7 @@ import javax.persistence.Table;
 public class Favourite {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @ManyToOne

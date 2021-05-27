@@ -28,7 +28,7 @@ import java.util.Date;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
