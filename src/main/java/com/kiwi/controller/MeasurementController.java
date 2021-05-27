@@ -59,17 +59,15 @@ public class MeasurementController {
 
     @PutMapping("/measurement/{id}")
     ResponseEntity<Object> update(@RequestBody Measurement measurement, @PathVariable long id) {
-        Optional<Measurement> measurementOptional = Optional.ofNullable(measurementService.findById(id));
+        Optional<Measurement> measurementOptional = measurementService.update(measurement, id);
 
         if (!measurementOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        measurement.setId(id);
-        Measurement savedMeasurement = measurementService.save(measurement);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedMeasurement.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(measurementOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

@@ -63,7 +63,7 @@ class ProductControllerTest {
     @Test
     void findById() throws Exception {
         //given
-        given(productService.findById(1L)).willReturn((new Product()));
+        given(productService.findById(1L)).willReturn(new Product());
 
         //when
         mockMvc.perform(get("/api/v1/product/{id}", 1L))

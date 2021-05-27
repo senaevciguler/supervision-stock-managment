@@ -60,17 +60,15 @@ public class RoleController {
 
     @PutMapping("/role/{id}")
     ResponseEntity<Object> update(@RequestBody Role role, @PathVariable long id) {
-        Optional<Role> roleOptional = Optional.ofNullable(roleService.findById(id));
+        Optional<Role> roleOptional = roleService.update(role,id);
 
         if (!roleOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        role.setId(id);
-        Role savedRole = roleService.save(role);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedRole.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(roleOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

@@ -59,17 +59,15 @@ public class AddressController {
 
     @PutMapping("/address/{id}")
     public ResponseEntity<Object> updateAddress(@PathVariable long id, @RequestBody Address address) {
-        Optional<Address> addressOptional = Optional.ofNullable(addressService.findById(id));
+        Optional<Address> addressOptional = addressService.update(address,id);
 
         if (!addressOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        address.setId(id);
-        Address savedAddress = addressService.save(address);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedAddress.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(addressOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

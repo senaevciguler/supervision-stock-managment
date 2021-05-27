@@ -60,18 +60,15 @@ public class StoreController {
 
     @PutMapping("/store/{id}")
     public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Store store) {
-        Optional<Store> storeOptional = Optional.ofNullable(storeService.findById(id));
+        Optional<Store> storeOptional = storeService.update(store,id);
 
         if (!storeOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        store.setId(id);
-        Store savedStore = storeService.save(store);
-
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedStore.getId())
+                .buildAndExpand(storeOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

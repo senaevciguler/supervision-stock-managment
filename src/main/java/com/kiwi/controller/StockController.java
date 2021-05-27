@@ -61,18 +61,15 @@ public class StockController {
 
     @PutMapping("/stock/{id}")
     public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Stock stock) {
-        Optional<Stock> stockOptional = Optional.ofNullable(stockService.findById(id));
+        Optional<Stock> stockOptional = stockService.update(stock,id);
 
         if (!stockOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        stock.setId(id);
-        Stock savedStock = stockService.save(stock);
-
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedStock.getId())
+                .buildAndExpand(stockOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

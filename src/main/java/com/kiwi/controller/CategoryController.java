@@ -59,17 +59,15 @@ public class CategoryController {
 
     @PutMapping("/category/{id}")
     public ResponseEntity<Object> updateBasket(@PathVariable long id, @RequestBody Category category) {
-        Optional<Category> categoryOptional = Optional.ofNullable(categoryService.findById(id));
+        Optional<Category> categoryOptional = categoryService.update(category,id);
 
         if (!categoryOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        category.setId(id);
-        Category savedCategory = categoryService.save(category);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCategory.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(categoryOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

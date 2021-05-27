@@ -59,17 +59,15 @@ public class BasketController {
 
     @PutMapping("/basket/{id}")
     public ResponseEntity<Object> updateBasket(@PathVariable long id, @RequestBody Basket basket) {
-        Optional<Basket> basketOptional = Optional.ofNullable(basketService.findById(id));
+        Optional<Basket> basketOptional = basketService.update(basket, id);
 
         if (!basketOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        basket.setId(id);
-        Basket savedBasket = basketService.save(basket);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedBasket.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(basketOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

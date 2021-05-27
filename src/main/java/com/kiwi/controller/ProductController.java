@@ -80,17 +80,15 @@ public class ProductController {
 
     @PutMapping("/product/{id}")
     public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Product product) {
-        Optional<Product> productOptional = Optional.ofNullable(productService.findById(id));
+        Optional<Product> productOptional = productService.update(product, id);
 
         if (!productOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        product.setId(id);
-        Product savedProduct = productService.save(product);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedProduct.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(productOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

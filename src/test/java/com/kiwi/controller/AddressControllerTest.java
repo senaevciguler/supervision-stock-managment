@@ -1,9 +1,7 @@
 package com.kiwi.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kiwi.entities.Address;
-import com.kiwi.entities.Product;
 import com.kiwi.services.AddressService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,17 +11,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class AddressControllerTest {
@@ -46,7 +44,7 @@ class AddressControllerTest {
     @Test
     void getAllAddress() throws Exception {
         //given
-        List<Address> adresses = List.of(Address.builder()
+        List<Address> addresses = List.of(Address.builder()
                 .id(1L)
                 .addressLine("test")
                 .city("test")
@@ -54,10 +52,10 @@ class AddressControllerTest {
                 .phone("12345")
                 .postalCode(1)
                 .build());
-        given(addressService.findAll()).willReturn(adresses);
+        given(addressService.findAll()).willReturn(addresses);
 
         //when
-        mockMvc.perform(get("api/v1/address"))
+        mockMvc.perform(get("/api/v1/address"))
                 .andExpect(status().isOk());
 
         //then
@@ -67,9 +65,9 @@ class AddressControllerTest {
     @Test
     void getAddressById() throws Exception {
         //given
-        given(addressService.findById(1L)).willReturn((new Address()));
+        given(addressService.findById(1L)).willReturn(new Address());
         //when
-        mockMvc.perform(get("api/v1/address/{id}", 1L))
+        mockMvc.perform(get("/api/v1/address/{id}", 1L))
                 .andExpect(status().isOk());
         //then
         then(addressService).should().findById(1L);
@@ -108,21 +106,28 @@ class AddressControllerTest {
                 .phone("123456")
                 .postalCode(1234)
                 .build();
-        given(addressService.update(any(), any())).willReturn(java.util.Optional.ofNullable(address));
+        given(addressService.update(address, 1L))
+                .willReturn(Optional.ofNullable(address));
+
 
         //when
-        mockMvc.perform(post("/api/v1/address/{id}")
+        mockMvc.perform(put("/api/v1/address/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(address)))
                 .andExpect(status().isCreated());
 
         //then
-        then(addressService).should().update(any(), any());
+        then(addressService).should().update(address, 1L);
     }
 
 
     @Test
-    void deleteAddress() {
+    void deleteAddress() throws Exception{
+        //when
+        mockMvc.perform(delete("/api/v1/address/{id}", 1L))
+                .andExpect(status().isOk());
+        //then
+        then(addressService).should().deleteById(anyLong());
     }
 }
 

@@ -60,17 +60,15 @@ public class FavouriteController {
 
     @PutMapping("/favourite/{id}")
     ResponseEntity<Object> update(@RequestBody Favourite favourite, @PathVariable long id) {
-        Optional<Favourite> favouriteOptional = Optional.ofNullable(favouriteService.findById(id));
+        Optional<Favourite> favouriteOptional = favouriteService.update(favourite,id);
 
         if (!favouriteOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        favourite.setId(id);
-        Favourite savedFavourite = favouriteService.save(favourite);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedFavourite.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(favouriteOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

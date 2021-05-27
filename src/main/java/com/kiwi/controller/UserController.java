@@ -60,17 +60,15 @@ public class UserController {
 
     @PutMapping("/user/{id}")
     ResponseEntity<Object> update(@RequestBody User user, @PathVariable long id) {
-        Optional<User> userOptional = Optional.ofNullable(userService.findById(id));
+        Optional<User> userOptional = userService.update(user,id);
 
         if (!userOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        user.setId(id);
-        User savedUser = userService.save(user);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(userOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

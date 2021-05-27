@@ -69,17 +69,15 @@ public class OrderController {
 
     @PutMapping("/order/{id}")
     ResponseEntity<Object> update(@RequestBody Order order, @PathVariable long id) {
-        Optional<Order> orderOptional = Optional.ofNullable(orderService.findById(id));
+        Optional<Order> orderOptional = orderService.update(order,id);
 
         if (!orderOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        order.setId(id);
-        Order savedOrder = orderService.save(order);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedOrder.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(orderOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

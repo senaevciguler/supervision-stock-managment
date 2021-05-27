@@ -60,17 +60,15 @@ public class IngredientController {
 
     @PutMapping("/ingredient/{id}")
     ResponseEntity<Object> update(@RequestBody Ingredient ingredient, @PathVariable long id) {
-        Optional<Ingredient> ingredientOptional = Optional.ofNullable(ingredientService.findById(id));
+        Optional<Ingredient> ingredientOptional = ingredientService.update(ingredient,id);
 
         if (!ingredientOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
                     LocaleContextHolder.getLocale()) + " id-" + id);
         }
 
-        ingredient.setId(id);
-        Ingredient savedIngredient = ingredientService.save(ingredient);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedIngredient.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(ingredientOptional.get().getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();
