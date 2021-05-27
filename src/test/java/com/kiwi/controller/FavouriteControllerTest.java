@@ -1,11 +1,8 @@
 package com.kiwi.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kiwi.entities.Basket;
 import com.kiwi.entities.Favourite;
 import com.kiwi.entities.Product;
-import com.kiwi.services.BasketService;
 import com.kiwi.services.FavouriteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,11 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -50,22 +45,14 @@ class FavouriteControllerTest {
     @Test
     void findALl() throws Exception{
         //given
-        Product product = Product.builder()
-                .id(1L)
-                .name("test")
-                .price(BigDecimal.valueOf(100L))
-                .build();
-        //given
         List<Favourite> favourites = List.of(Favourite.builder()
                 .id(1L)
-                .product(product)
+                .product(Product.builder().build())
                 .build());
         given(favouriteService.findAll()).willReturn(favourites);
-
         //when
         mockMvc.perform(get("/api/v1/favourite"))
                 .andExpect(status().isOk());
-
         //then
         then(favouriteService).should().findAll();
     }
@@ -84,19 +71,12 @@ class FavouriteControllerTest {
     @Test
     void save() throws Exception {
         //given
-        Product product = Product.builder()
-                .id(1L)
-                .name("test")
-                .price(BigDecimal.valueOf(100L))
-                .build();
-        //given
         Favourite favourite = Favourite.builder()
                 .id(1L)
-                .product(product)
+                .product(Product.builder().build())
                 .build();
         //given
         given(favouriteService.save(any())).willReturn(favourite);
-
         //when
         mockMvc.perform(post("/api/v1/favourite")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -108,25 +88,16 @@ class FavouriteControllerTest {
 
     @Test
     void update() throws Exception {
-        //given
-        Product product = Product.builder()
-                .id(1L)
-                .name("test")
-                .price(BigDecimal.valueOf(100L))
-                .build();
-        //given
         Favourite favourite = Favourite.builder()
-                .product(product)
+                .product(Product.builder().build())
                 .build();
         given(favouriteService.update(favourite, 1L))
                 .willReturn(Optional.ofNullable(favourite));
-
         //when
         mockMvc.perform(put("/api/v1/favourite/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(favourite)))
                 .andExpect(status().isCreated());
-
         //then
         then(favouriteService).should().update(favourite, 1L);
     }

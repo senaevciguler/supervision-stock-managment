@@ -1,10 +1,8 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kiwi.entities.Address;
-import com.kiwi.entities.Product;
-import com.kiwi.entities.Store;
-import com.kiwi.services.StoreService;
+import com.kiwi.entities.Measurement;
+import com.kiwi.services.MeasurementService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,13 +24,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class StoreControllerTest {
+public class MeasurementControllerTest {
 
     @Mock
-    StoreService storeService;
+    MeasurementService measurementService;
 
     @InjectMocks
-    StoreController storeController;
+    MeasurementController measurementController;
 
     private static final ObjectMapper om = new ObjectMapper();
 
@@ -40,81 +38,75 @@ class StoreControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(storeController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(measurementController).build();
     }
 
     @Test
     void findAll() throws Exception {
         //given
-        List<Store> store = List.of(Store.builder()
+        List<Measurement> measurements = List.of(Measurement.builder()
                 .id(1L)
                 .name("test")
-                .products(List.of(Product.builder().build()))
-                .address(Address.builder().build())
                 .build());
-        given(storeService.findAll()).willReturn(store);
+        given(measurementService.findAll()).willReturn(measurements);
         //when
-        mockMvc.perform(get("/api/v1/store"))
+        mockMvc.perform(get("/api/v1/measurement"))
                 .andExpect(status().isOk());
         //then
-        then(storeService).should().findAll();
+        then(measurementService).should().findAll();
     }
 
     @Test
     void getById() throws Exception {
         //given
-        given(storeService.findById(1L)).willReturn(new Store());
+        given(measurementService.findById(1L)).willReturn(new Measurement());
         //when
-        mockMvc.perform(get("/api/v1/store/{id}", 1L))
+        mockMvc.perform(get("/api/v1/measurement/{id}", 1L))
                 .andExpect(status().isOk());
         //then
-        then(storeService).should().findById(1L);
+        then(measurementService).should().findById(1L);
     }
 
     @Test
     void save() throws Exception {
-        Store store = Store.builder()
+        Measurement measurement = Measurement.builder()
                 .id(1L)
                 .name("test")
-                .products(List.of(Product.builder().build()))
-                .address(Address.builder().build())
                 .build();
         //given
-        given(storeService.save(any())).willReturn(store);
+        given(measurementService.save(any())).willReturn(measurement);
         //when
-        mockMvc.perform(post("/api/v1/store")
+        mockMvc.perform(post("/api/v1/measurement")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(new Store())))
+                .content(om.writeValueAsString(new Measurement())))
                 .andExpect(status().isCreated());
         //then
-        then(storeService).should().save(any());
+        then(measurementService).should().save(any());
     }
 
     @Test
     void update() throws Exception {
         //given
-        Store store = Store.builder()
+        Measurement measurement = Measurement.builder()
                 .name("test")
-                .products(List.of(Product.builder().build()))
-                .address(Address.builder().build())
                 .build();
-        given(storeService.update(store, 1L))
-                .willReturn(Optional.ofNullable(store));
+        given(measurementService.update(measurement, 1L))
+                .willReturn(Optional.ofNullable(measurement));
         //when
-        mockMvc.perform(put("/api/v1/store/{id}", 1L)
+        mockMvc.perform(put("/api/v1/measurement/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(store)))
+                .content(om.writeValueAsString(measurement)))
                 .andExpect(status().isCreated());
         //then
-        then(storeService).should().update(store, 1L);
+        then(measurementService).should().update(measurement, 1L);
     }
 
     @Test
     void deleteById() throws Exception {
         //when
-        mockMvc.perform(delete("/api/v1/store/{id}", 1L))
+        mockMvc.perform(delete("/api/v1/measurement/{id}", 1L))
                 .andExpect(status().isOk());
         //then
-        then(storeService).should().delete(anyLong());
+        then(measurementService).should().delete(anyLong());
     }
 }

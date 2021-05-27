@@ -46,7 +46,8 @@ public class AddressController {
     public ResponseEntity<Object> save(@RequestBody Address address) {
         Address savedAddress = addressService.save(address);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedAddress.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(savedAddress.getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

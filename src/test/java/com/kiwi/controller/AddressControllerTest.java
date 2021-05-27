@@ -53,11 +53,9 @@ class AddressControllerTest {
                 .postalCode(1)
                 .build());
         given(addressService.findAll()).willReturn(addresses);
-
         //when
         mockMvc.perform(get("/api/v1/address"))
                 .andExpect(status().isOk());
-
         //then
         then(addressService).should().findAll();
     }
@@ -71,7 +69,6 @@ class AddressControllerTest {
                 .andExpect(status().isOk());
         //then
         then(addressService).should().findById(1L);
-
     }
 
     @Test
@@ -85,19 +82,17 @@ class AddressControllerTest {
                 .postalCode(1234)
                 .build();
         given(addressService.save(any())).willReturn(address);
-
         //when
         mockMvc.perform(post("/api/v1/address")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(new Address())))
                 .andExpect(status().isCreated());
-
         //then
         then(addressService).should().save(any());
     }
 
     @Test
-    void updateAddress() throws Exception{
+    void updateAddress() throws Exception {
         //given
         Address address = Address.builder()
                 .addressLine("test")
@@ -108,21 +103,17 @@ class AddressControllerTest {
                 .build();
         given(addressService.update(address, 1L))
                 .willReturn(Optional.ofNullable(address));
-
-
         //when
         mockMvc.perform(put("/api/v1/address/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(address)))
                 .andExpect(status().isCreated());
-
         //then
         then(addressService).should().update(address, 1L);
     }
 
-
     @Test
-    void deleteAddress() throws Exception{
+    void deleteAddress() throws Exception {
         //when
         mockMvc.perform(delete("/api/v1/address/{id}", 1L))
                 .andExpect(status().isOk());

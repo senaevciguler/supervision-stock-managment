@@ -1,6 +1,10 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiwi.entities.Basket;
+import com.kiwi.entities.Category;
+import com.kiwi.entities.Ingredient;
+import com.kiwi.entities.Measurement;
 import com.kiwi.entities.Product;
 import com.kiwi.services.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +19,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,14 +53,17 @@ class ProductControllerTest {
                 .id(1L)
                 .name("test")
                 .price(BigDecimal.valueOf(100L))
+                .photo(om.writeValueAsBytes("test"))
+                .measurement(Measurement.builder().build())
+                .ingredients(List.of(Ingredient.builder().build()))
+                .category(Category.builder().build())
+                .basket(Basket.builder().build())
                 .build());
 
         given(productService.findAll()).willReturn(products);
-
         //when
         mockMvc.perform(get("/api/v1/product"))
                 .andExpect(status().isOk());
-
         //then
         then(productService).should().findAll();
     }
@@ -64,31 +72,33 @@ class ProductControllerTest {
     void findById() throws Exception {
         //given
         given(productService.findById(1L)).willReturn(new Product());
-
         //when
         mockMvc.perform(get("/api/v1/product/{id}", 1L))
                 .andExpect(status().isOk());
-
         //then
         then(productService).should().findById(1L);
     }
 
     @Test
-    void create() throws Exception {
+    void save() throws Exception {
         //given
         Product product = Product.builder()
+                .id(1L)
                 .name("test")
+                .basket(Basket.builder().build())
+                .category(Category.builder().build())
+                .price(BigDecimal.valueOf(1))
+                .ingredients(List.of(Ingredient.builder().build()))
+                .measurement(Measurement.builder().build())
+                .photo(om.writeValueAsBytes("test"))
                 .price(BigDecimal.valueOf(100L))
                 .build();
-
         given(productService.save(any())).willReturn(product);
-
         //when
         mockMvc.perform(post("/api/v1/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(new Product())))
                 .andExpect(status().isCreated());
-
         //then
         then(productService).should().save(any());
     }
@@ -97,49 +107,31 @@ class ProductControllerTest {
     void update() throws Exception {
         //given
         Product product = Product.builder()
-                .id(1L)
                 .name("test")
+                .basket(Basket.builder().build())
+                .category(Category.builder().build())
+                .price(BigDecimal.valueOf(1))
+                .ingredients(List.of(Ingredient.builder().build()))
+                .measurement(Measurement.builder().build())
+                .photo(om.writeValueAsBytes("test"))
                 .price(BigDecimal.valueOf(100L))
                 .build();
-
-        /*Product product = Product.builder()
-                .id(1L)
-                .name("test")
-                .price(BigDecimal.valueOf(100L))
-                .build();*/
-
-        /*ProductRequest productRequest = ProductRequest.builder()
-                .product(productDto)
-                .build();*/
-
-        given(productService.update(any(), any())).willReturn(java.util.Optional.ofNullable(product));
-
+        given(productService.update(product, 1L)).willReturn(Optional.ofNullable(product));
         //when
-        mockMvc.perform(post("/api/v1/product/{id}")
+        mockMvc.perform(put("/api/v1/product/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(product)))
                 .andExpect(status().isCreated());
-
         //then
-        then(productService).should().update(any(), any());
+        then(productService).should().update(product, 1L);
     }
 
-
     @Test
-    void delete() throws Exception {
-        /*
-        //given
-        Product productDeleteRequest = Product.builder().id(1L).build();
-
-        given(productService.deleteById(anyLong())).willReturn(new Product());
-
+    void deleteById() throws Exception {
         //when
-        mockMvc.perform(post("/api/v1/product/{id}")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(productDeleteRequest)))
+        mockMvc.perform(delete("/api/v1/product/{id}", 1L))
                 .andExpect(status().isOk());
-
         //then
-        then(productService).should().deleteById(anyLong());*/
+        then(productService).should().deleteById(anyLong());
     }
 }

@@ -1,9 +1,7 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kiwi.entities.Basket;
 import com.kiwi.entities.Ingredient;
-import com.kiwi.services.BasketService;
 import com.kiwi.services.IngredientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +16,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -44,7 +41,6 @@ class IngredientControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
     }
 
-
     @Test
     void findALl() throws Exception {
         //given
@@ -53,11 +49,9 @@ class IngredientControllerTest {
                 .name("test")
                 .build());
         given(ingredientService.findAll()).willReturn(ingredients);
-
         //when
         mockMvc.perform(get("/api/v1/ingredient"))
                 .andExpect(status().isOk());
-
         //then
         then(ingredientService).should().findAll();
     }
@@ -91,20 +85,18 @@ class IngredientControllerTest {
     }
 
     @Test
-    void update()throws Exception {
+    void update() throws Exception {
         //given
         Ingredient ingredient = Ingredient.builder()
                 .name("test")
                 .build();
         given(ingredientService.update(ingredient, 1L))
                 .willReturn(Optional.ofNullable(ingredient));
-
         //when
         mockMvc.perform(put("/api/v1/ingredient/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(ingredient)))
                 .andExpect(status().isCreated());
-
         //then
         then(ingredientService).should().update(ingredient, 1L);
     }

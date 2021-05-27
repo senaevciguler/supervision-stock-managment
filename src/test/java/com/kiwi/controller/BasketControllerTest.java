@@ -1,16 +1,13 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kiwi.entities.Address;
 import com.kiwi.entities.Basket;
 import com.kiwi.services.BasketService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,10 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,11 +49,9 @@ class BasketControllerTest {
                 .quantity(1L)
                 .build());
         given(basketService.findAll()).willReturn(basket);
-
         //when
         mockMvc.perform(get("/api/v1/basket"))
                 .andExpect(status().isOk());
-
         //then
         then(basketService).should().findAll();
     }
@@ -73,7 +65,6 @@ class BasketControllerTest {
                 .andExpect(status().isOk());
         //then
         then(basketService).should().findById(1L);
-
     }
 
     @Test
@@ -101,13 +92,11 @@ class BasketControllerTest {
                 .build();
         given(basketService.update(basket, 1L))
                 .willReturn(Optional.ofNullable(basket));
-
         //when
         mockMvc.perform(put("/api/v1/basket/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(basket)))
                 .andExpect(status().isCreated());
-
         //then
         then(basketService).should().update(basket, 1L);
     }
