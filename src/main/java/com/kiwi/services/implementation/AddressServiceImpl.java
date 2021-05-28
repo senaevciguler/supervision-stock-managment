@@ -1,6 +1,7 @@
 package com.kiwi.services.implementation;
 
 import com.kiwi.entities.Address;
+import com.kiwi.exception.NotFoundException;
 import com.kiwi.repositories.AddressRepository;
 import com.kiwi.services.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,8 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address findById(long id) {
-        return addressRepository.findById(id).get();
+        return addressRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product can not find with id :" + id));
     }
 
     @Override
