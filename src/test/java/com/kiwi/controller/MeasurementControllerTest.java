@@ -1,6 +1,9 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiwi.dto.IngredientDto;
+import com.kiwi.dto.MeasurementDto;
+import com.kiwi.entities.Ingredient;
 import com.kiwi.entities.Measurement;
 import com.kiwi.services.MeasurementService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,6 +32,9 @@ public class MeasurementControllerTest {
 
     @Mock
     MeasurementService measurementService;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     MeasurementController measurementController;
@@ -86,19 +93,26 @@ public class MeasurementControllerTest {
 
     @Test
     void update() throws Exception {
+
         //given
+        MeasurementDto measurementDto = MeasurementDto.builder()
+                .id(1L)
+                .name("test")
+                .build();
+
         Measurement measurement = Measurement.builder()
                 .name("test")
                 .build();
-        given(measurementService.update(measurement, 1L))
+        given(measurementService.update(any(), anyLong()))
                 .willReturn(Optional.ofNullable(measurement));
         //when
         mockMvc.perform(put("/api/v1/measurement/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(measurement)))
+                .content(om.writeValueAsString(measurementDto)))
                 .andExpect(status().isCreated());
         //then
-        then(measurementService).should().update(measurement, 1L);
+        then(measurementService).should().update(any(), anyLong());
+
     }
 
     @Test

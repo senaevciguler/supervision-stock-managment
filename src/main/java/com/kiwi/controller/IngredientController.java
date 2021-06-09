@@ -1,8 +1,12 @@
 package com.kiwi.controller;
 
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.IngredientDto;
+import com.kiwi.entities.Address;
 import com.kiwi.entities.Ingredient;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.IngredientService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -37,30 +42,44 @@ public class IngredientController {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/ingredient")
-    public List<Ingredient> findALl() {
-        return ingredientService.findAll();
+    public List<IngredientDto> findALl() {
+        return ingredientService.findAll()
+                .stream()
+                .map(ingredient -> modelMapper.map(ingredient, IngredientDto.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/ingredient/{id}")
-    public Ingredient findById(@PathVariable long id) {
-        return ingredientService.findById(id);
+    public IngredientDto findById(@PathVariable long id) {
+
+        Ingredient ingredient = ingredientService.findById(id);
+
+        return modelMapper.map(ingredient, IngredientDto.class);
 
     }
 
     @PostMapping("/ingredient")
-    ResponseEntity<Object> save(@RequestBody Ingredient ingredient) {
-        Ingredient savedIngredient = ingredientService.save(ingredient);
+    ResponseEntity<Object> save(@RequestBody IngredientDto ingredientDto) {
+        Ingredient ingredient = modelMapper.map(ingredientDto, Ingredient.class);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedIngredient.getId())
+        ingredient = ingredientService.save(ingredient);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(ingredient.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(ingredient, IngredientDto.class));
     }
 
     @PutMapping("/ingredient/{id}")
-    ResponseEntity<Object> update(@RequestBody Ingredient ingredient, @PathVariable long id) {
-        Optional<Ingredient> ingredientOptional = ingredientService.update(ingredient,id);
+    ResponseEntity<Object> update(@RequestBody IngredientDto ingredientDto, @PathVariable long id) {
+        Ingredient ingredient = modelMapper.map(ingredientDto, Ingredient.class);
+        Optional<Ingredient> ingredientOptional = ingredientService.update(ingredient, id);
 
         if (!ingredientOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
@@ -71,7 +90,8 @@ public class IngredientController {
                 .buildAndExpand(ingredientOptional.get().getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(ingredientOptional, IngredientDto.class));
     }
 
     @DeleteMapping("/ingredient/{id}")

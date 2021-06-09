@@ -1,6 +1,7 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiwi.dto.AddressDto;
 import com.kiwi.entities.Address;
 import com.kiwi.services.AddressService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,6 +30,9 @@ class AddressControllerTest {
 
     @Mock
     AddressService addressService;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     AddressController addressController;
@@ -94,6 +99,15 @@ class AddressControllerTest {
     @Test
     void updateAddress() throws Exception {
         //given
+        AddressDto addressDto = AddressDto.builder()
+                .id(1L)
+                .addressLine("test")
+                .city("test")
+                .country("test")
+                .phone("123456")
+                .postalCode(1234)
+                .build();
+
         Address address = Address.builder()
                 .addressLine("test")
                 .city("test")
@@ -101,15 +115,15 @@ class AddressControllerTest {
                 .phone("123456")
                 .postalCode(1234)
                 .build();
-        given(addressService.update(address, 1L))
+        given(addressService.update(any(), anyLong()))
                 .willReturn(Optional.ofNullable(address));
         //when
         mockMvc.perform(put("/api/v1/address/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(address)))
+                .content(om.writeValueAsString(addressDto)))
                 .andExpect(status().isCreated());
         //then
-        then(addressService).should().update(address, 1L);
+        then(addressService).should().update(any(), anyLong());
     }
 
     @Test

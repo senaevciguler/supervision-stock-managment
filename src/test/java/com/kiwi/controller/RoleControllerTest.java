@@ -1,6 +1,17 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiwi.dto.BasketDto;
+import com.kiwi.dto.CategoryDto;
+import com.kiwi.dto.IngredientDto;
+import com.kiwi.dto.MeasurementDto;
+import com.kiwi.dto.ProductDto;
+import com.kiwi.dto.RoleDto;
+import com.kiwi.entities.Basket;
+import com.kiwi.entities.Category;
+import com.kiwi.entities.Ingredient;
+import com.kiwi.entities.Measurement;
+import com.kiwi.entities.Product;
 import com.kiwi.entities.Role;
 import com.kiwi.services.RoleService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,10 +20,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +41,9 @@ class RoleControllerTest {
 
     @Mock
     RoleService roleService;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     RoleController roleController;
@@ -87,28 +103,25 @@ class RoleControllerTest {
 
     @Test
     void update() throws Exception {
+
         //given
+        RoleDto roleDto = RoleDto.builder()
+                .id(1L)
+                .name("test")
+                .build();
+
         Role role = Role.builder()
                 .name("test")
                 .build();
-        given(roleService.update(role, 1L))
+        given(roleService.update(any(), anyLong()))
                 .willReturn(Optional.ofNullable(role));
         //when
         mockMvc.perform(put("/api/v1/role/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(role)))
+                .content(om.writeValueAsString(roleDto)))
                 .andExpect(status().isCreated());
-
         //then
-        then(roleService).should().update(role, 1L);
-    }
+        then(roleService).should().update(any(), anyLong());
 
-    @Test
-    void deleteById() throws Exception {
-        //when
-        mockMvc.perform(delete("/api/v1/role/{id}", 1L))
-                .andExpect(status().isOk());
-        //then
-        then(roleService).should().delete(anyLong());
     }
 }

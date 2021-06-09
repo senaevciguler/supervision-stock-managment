@@ -1,8 +1,13 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.ProductDto;
+import com.kiwi.dto.StockDto;
+import com.kiwi.dto.StoreDto;
 import com.kiwi.entities.Address;
 import com.kiwi.entities.Product;
+import com.kiwi.entities.Stock;
 import com.kiwi.entities.Store;
 import com.kiwi.services.StoreService;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -30,6 +36,9 @@ class StoreControllerTest {
 
     @Mock
     StoreService storeService;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     StoreController storeController;
@@ -93,28 +102,27 @@ class StoreControllerTest {
     @Test
     void update() throws Exception {
         //given
+        StoreDto storeDto = StoreDto.builder()
+                .id(1L)
+                .name("test")
+                .products(List.of(ProductDto.builder().build()))
+                .address(AddressDto.builder().build())
+                .build();
+
         Store store = Store.builder()
                 .name("test")
                 .products(List.of(Product.builder().build()))
                 .address(Address.builder().build())
                 .build();
-        given(storeService.update(store, 1L))
+        given(storeService.update(any(), anyLong()))
                 .willReturn(Optional.ofNullable(store));
         //when
         mockMvc.perform(put("/api/v1/store/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(store)))
+                .content(om.writeValueAsString(storeDto)))
                 .andExpect(status().isCreated());
         //then
-        then(storeService).should().update(store, 1L);
-    }
+        then(storeService).should().update(any(), anyLong());
 
-    @Test
-    void deleteById() throws Exception {
-        //when
-        mockMvc.perform(delete("/api/v1/store/{id}", 1L))
-                .andExpect(status().isOk());
-        //then
-        then(storeService).should().delete(anyLong());
     }
 }

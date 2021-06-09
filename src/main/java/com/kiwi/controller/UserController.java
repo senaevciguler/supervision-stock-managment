@@ -1,8 +1,12 @@
 package com.kiwi.controller;
 
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.UserDto;
+import com.kiwi.entities.Address;
 import com.kiwi.entities.User;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -37,30 +42,43 @@ public class UserController {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/user")
-    public List<User> findAll() {
-        return userService.findAll();
+    public List<UserDto> findAll() {
+        return userService.findAll()
+                .stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/user/{id}")
-    public User findById(@PathVariable long id) {
-        return userService.findById(id);
+    public UserDto findById(@PathVariable long id) {
+        User user = userService.findById(id);
+
+        return modelMapper.map(user, UserDto.class);
     }
 
     @PostMapping("/user")
-    ResponseEntity<Object> save(@RequestBody User user) {
-        User savedUser = userService.save(user);
+    ResponseEntity<Object> save(@RequestBody UserDto userDto) {
+        User user = modelMapper.map(userDto, User.class);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
+        user = userService.save(user);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(user.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(user, UserDto.class));
     }
 
 
     @PutMapping("/user/{id}")
-    ResponseEntity<Object> update(@RequestBody User user, @PathVariable long id) {
-        Optional<User> userOptional = userService.update(user,id);
+    ResponseEntity<Object> update(@RequestBody UserDto userDto, @PathVariable long id) {
+        User user = modelMapper.map(userDto, User.class);
+        Optional<User> userOptional = userService.update(user, id);
 
         if (!userOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
@@ -71,7 +89,8 @@ public class UserController {
                 .buildAndExpand(userOptional.get().getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(userOptional, UserDto.class));
     }
 
     @DeleteMapping("/user/{id}")

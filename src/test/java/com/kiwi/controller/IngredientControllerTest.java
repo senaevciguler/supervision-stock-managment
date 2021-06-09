@@ -1,6 +1,9 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiwi.dto.BasketDto;
+import com.kiwi.dto.IngredientDto;
+import com.kiwi.entities.Basket;
 import com.kiwi.entities.Ingredient;
 import com.kiwi.services.IngredientService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,6 +32,9 @@ class IngredientControllerTest {
 
     @Mock
     IngredientService ingredientService;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     IngredientController ingredientController;
@@ -86,19 +93,26 @@ class IngredientControllerTest {
 
     @Test
     void update() throws Exception {
+
         //given
+        IngredientDto ingredientDto = IngredientDto.builder()
+                .id(1L)
+                .name("test")
+                .build();
+
         Ingredient ingredient = Ingredient.builder()
                 .name("test")
                 .build();
-        given(ingredientService.update(ingredient, 1L))
+        given(ingredientService.update(any(), anyLong()))
                 .willReturn(Optional.ofNullable(ingredient));
         //when
         mockMvc.perform(put("/api/v1/ingredient/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(ingredient)))
+                .content(om.writeValueAsString(ingredientDto)))
                 .andExpect(status().isCreated());
         //then
-        then(ingredientService).should().update(ingredient, 1L);
+        then(ingredientService).should().update(any(), anyLong());
+
     }
 
     @Test

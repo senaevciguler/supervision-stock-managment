@@ -34,7 +34,7 @@ public class StockServiceImpl implements StockService {
     public Optional<Stock> update(Stock stock, long id) {
         return stockRepository.findById(id).map(stockUpdated -> {
             stockUpdated.setName(stock.getName());
-            stockUpdated.setProducts(stock.getProducts());
+            stockUpdated.setProduct(stock.getProduct());
             stockUpdated.setQuantity(stock.getQuantity());
 
             return stockRepository.save(stockUpdated);

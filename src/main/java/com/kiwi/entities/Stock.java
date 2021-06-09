@@ -8,15 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Collection;
 
 @Builder
 @AllArgsConstructor
@@ -36,15 +32,9 @@ public class Stock {
 
     @PositiveOrZero
     @Column(name = "quantity")
-    private Long quantity;
+    private Integer quantity;
 
-    @ManyToMany
-    @JoinTable(
-            name = "stock_product",
-            joinColumns = @JoinColumn(
-                    name = "stock_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "product_id", referencedColumnName = "id"))
-    private Collection<Product> products;
+    @OneToOne
+    private Product product;
 
 }

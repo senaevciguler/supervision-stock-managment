@@ -1,8 +1,12 @@
 package com.kiwi.controller;
 
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.StockDto;
+import com.kiwi.entities.Address;
 import com.kiwi.entities.Stock;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.StockService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -37,31 +42,42 @@ public class StockController {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/stock")
-    public List<Stock> findAll() {
-        return stockService.findAll();
+    public List<StockDto> findAll() {
+        return stockService.findAll()
+                .stream()
+                .map(stock -> modelMapper.map(stock, StockDto.class))
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/stock")
-    public ResponseEntity<Object> save(@RequestBody Stock stock) {
-        Stock savedStock = stockService.save(stock);
+    public ResponseEntity<Object> save(@RequestBody StockDto stockDto) {
+        Stock stock = modelMapper.map(stockDto, Stock.class);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedStock.getId())
+        stock = stockService.save(stock);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(stock.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(stock, StockDto.class));
 
     }
 
     @GetMapping("/stock/{id}")
-    public Stock findById(@PathVariable long id) {
-        return stockService.findById(id);
+    public StockDto findById(@PathVariable long id) {
+        Stock stock = stockService.findById(id);
+        return modelMapper.map(stock, StockDto.class);
     }
 
     @PutMapping("/stock/{id}")
-    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Stock stock) {
-        Optional<Stock> stockOptional = stockService.update(stock,id);
+    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody StockDto stockDto) {
+        Stock stock = modelMapper.map(stockDto, Stock.class);
+        Optional<Stock> stockOptional = stockService.update(stock, id);
 
         if (!stockOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
@@ -72,7 +88,8 @@ public class StockController {
                 .buildAndExpand(stockOptional.get().getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(stockOptional, StockDto.class));
     }
 
     @DeleteMapping("/stock/{id}")

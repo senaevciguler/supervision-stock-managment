@@ -1,8 +1,12 @@
 package com.kiwi.controller;
 
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.FavouriteDto;
+import com.kiwi.entities.Address;
 import com.kiwi.entities.Favourite;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.FavouriteService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -37,30 +42,41 @@ public class FavouriteController {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/favourite")
-    public List<Favourite> findALl() {
-        return favouriteService.findAll();
+    public List<FavouriteDto> findALl() {
+        return favouriteService.findAll()
+                .stream()
+                .map(favourite -> modelMapper.map(favourite, FavouriteDto.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/favourite/{id}")
-    public Favourite findById(@PathVariable long id) {
-        return favouriteService.findById(id);
-
+    public FavouriteDto findById(@PathVariable long id) {
+        Favourite favourite = favouriteService.findById(id);
+        return modelMapper.map(favourite, FavouriteDto.class);
     }
 
     @PostMapping("/favourite")
-    ResponseEntity<Object> save(@RequestBody Favourite favourite) {
-        Favourite savedFavourite = favouriteService.save(favourite);
+    public ResponseEntity<Object> save(@RequestBody FavouriteDto favouriteDto) {
+        Favourite favourite = modelMapper.map(favouriteDto, Favourite.class);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedFavourite.getId())
+        favourite = favouriteService.save(favourite);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(favourite.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(favourite, FavouriteDto.class));
     }
 
     @PutMapping("/favourite/{id}")
-    ResponseEntity<Object> update(@RequestBody Favourite favourite, @PathVariable long id) {
-        Optional<Favourite> favouriteOptional = favouriteService.update(favourite,id);
+    public ResponseEntity<Object> update(@RequestBody FavouriteDto favouriteDto, @PathVariable long id) {
+        Favourite favourite = modelMapper.map(favouriteDto, Favourite.class);
+        Optional<Favourite> favouriteOptional = favouriteService.update(favourite, id);
 
         if (!favouriteOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
@@ -71,7 +87,8 @@ public class FavouriteController {
                 .buildAndExpand(favouriteOptional.get().getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(favouriteOptional, FavouriteDto.class));
     }
 
     @DeleteMapping("/favourite/{id}")

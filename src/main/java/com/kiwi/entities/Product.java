@@ -61,4 +61,7 @@ public class Product {
     @Column(name = "photo")
     private byte[] photo;
 
+    @OneToOne
+    private Stock stock;
+
 }

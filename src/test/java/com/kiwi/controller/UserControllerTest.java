@@ -1,11 +1,21 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.BasketDto;
+import com.kiwi.dto.FavouriteDto;
+import com.kiwi.dto.OrderDto;
+import com.kiwi.dto.ProductDto;
+import com.kiwi.dto.RoleDto;
+import com.kiwi.dto.StockDto;
+import com.kiwi.dto.UserDto;
 import com.kiwi.entities.Address;
 import com.kiwi.entities.Basket;
 import com.kiwi.entities.Favourite;
 import com.kiwi.entities.Order;
+import com.kiwi.entities.Product;
 import com.kiwi.entities.Role;
+import com.kiwi.entities.Stock;
 import com.kiwi.entities.User;
 import com.kiwi.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -33,6 +44,9 @@ class UserControllerTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     UserController userController;
@@ -112,8 +126,22 @@ class UserControllerTest {
     }
 
     @Test
-    void updateBasket() throws Exception {
+    void update() throws Exception {
         //given
+        UserDto userDto = UserDto.builder()
+                .id(1L)
+                .basket(BasketDto.builder().build())
+                .email("test")
+                .favourites(List.of(FavouriteDto.builder().build()))
+                .firstName("test")
+                .lastName("test")
+                .orders(List.of(OrderDto.builder().build()))
+                .password("test")
+                .role(RoleDto.builder().build())
+                .username("test")
+                .address(AddressDto.builder().build())
+                .build();
+
         User user = User.builder()
                 .basket(Basket.builder().build())
                 .email("test")
@@ -126,15 +154,16 @@ class UserControllerTest {
                 .username("test")
                 .address(Address.builder().build())
                 .build();
-        given(userService.update(user, 1L))
+        given(userService.update(any(), anyLong()))
                 .willReturn(Optional.ofNullable(user));
         //when
         mockMvc.perform(put("/api/v1/user/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(user)))
+                .content(om.writeValueAsString(userDto)))
                 .andExpect(status().isCreated());
         //then
-        then(userService).should().update(user, 1L);
+        then(userService).should().update(any(), anyLong());
+
     }
 
     @Test

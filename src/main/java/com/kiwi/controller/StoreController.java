@@ -1,8 +1,12 @@
 package com.kiwi.controller;
 
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.StoreDto;
+import com.kiwi.entities.Address;
 import com.kiwi.entities.Store;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.StoreService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -37,30 +42,42 @@ public class StoreController {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/store")
-    public List<Store> findAll() {
-        return storeService.findAll();
+    public List<StoreDto> findAll() {
+        return storeService.findAll()
+                .stream()
+                .map(store -> modelMapper.map(store, StoreDto.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/store/{id}")
-    public Store findById(@PathVariable long id) {
-        return storeService.findById(id);
+    public StoreDto findById(@PathVariable long id) {
+        Store store = storeService.findById(id);
+
+        return modelMapper.map(store, StoreDto.class);
     }
 
     @PostMapping("/store")
-    ResponseEntity<Object> save(@RequestBody Store store) {
-        Store savedStore = storeService.save(store);
+    ResponseEntity<Object> save(@RequestBody StoreDto storeDto) {
+        Store store = modelMapper.map(storeDto, Store.class);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedStore.getId())
+        store = storeService.save(store);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(store.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(store, StoreDto.class));
     }
 
     @PutMapping("/store/{id}")
-    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Store store) {
-        Optional<Store> storeOptional = storeService.update(store,id);
+    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody StoreDto storeDto) {
+        Store store = modelMapper.map(storeDto, Store.class);
+        Optional<Store> storeOptional = storeService.update(store, id);
 
         if (!storeOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
@@ -71,7 +88,8 @@ public class StoreController {
                 .buildAndExpand(storeOptional.get().getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(storeOptional, StoreDto.class));
     }
 
     @DeleteMapping("/store/{id}")

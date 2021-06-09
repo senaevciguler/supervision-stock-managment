@@ -1,8 +1,12 @@
 package com.kiwi.controller;
 
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.ProductDto;
+import com.kiwi.entities.Address;
 import com.kiwi.entities.Product;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.ProductService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +30,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -40,21 +45,36 @@ public class ProductController {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/product")
-    public List<Product> getAll() {
-        return productService.findAll();
+    public List<ProductDto> getAll() {
+        return productService.findAll()
+                .stream()
+                .map(product -> modelMapper.map(product, ProductDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/product/{id}")
+    public ProductDto getById(@PathVariable long id) {
+        Product product = productService.findById(id);
+
+        return modelMapper.map(product, ProductDto.class);
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Object> save(@RequestBody Product product) {
-        Product savedProduct = productService.save(product);
+    public ResponseEntity<Object> save(@RequestBody ProductDto productDto) {
+        Product product = modelMapper.map(productDto, Product.class);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedProduct.getId())
+        product = productService.save(product);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(product.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
-
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(product, ProductDto.class));
     }
 
 
@@ -72,14 +92,9 @@ public class ProductController {
         return ResponseEntity.created(location).build();
     }
 
-
-    @GetMapping("/product/{id}")
-    public Product getById(@PathVariable long id) {
-        return productService.findById(id);
-    }
-
     @PutMapping("/product/{id}")
-    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody Product product) {
+    public ResponseEntity<Object> update(@PathVariable long id, @RequestBody ProductDto productDto) {
+        Product product = modelMapper.map(productDto, Product.class);
         Optional<Product> productOptional = productService.update(product, id);
 
         if (!productOptional.isPresent()) {
@@ -91,7 +106,8 @@ public class ProductController {
                 .buildAndExpand(productOptional.get().getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(productOptional, ProductDto.class));
     }
 
     @DeleteMapping("/product/{id}")

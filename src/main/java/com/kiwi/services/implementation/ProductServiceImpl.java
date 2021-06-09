@@ -34,6 +34,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findByIds(List<Long> ids) {
+        return null;
+    }
+
+    @Override
     public Optional<Product> update(Product product, long id) {
         return productRepository.findById(id).map(productUpdated -> {
             productUpdated.setName(product.getName());

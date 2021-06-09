@@ -1,8 +1,12 @@
 package com.kiwi.controller;
 
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.CategoryDto;
+import com.kiwi.entities.Address;
 import com.kiwi.entities.Category;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.CategoryService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -37,29 +42,44 @@ public class CategoryController {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/category")
-    public List<Category> findAll() {
-        return categoryService.findAll();
+    public List<CategoryDto> findAll() {
+        return categoryService.findAll()
+                .stream()
+                .map(category -> modelMapper.map(category, CategoryDto.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/category/{id}")
-    public Category findById(@PathVariable long id) {
-        return categoryService.findById(id);
+    public CategoryDto findById(@PathVariable long id) {
+        Category category = categoryService.findById(id);
+
+        return modelMapper.map(category, CategoryDto.class);
+
     }
 
     @PostMapping("/category")
-    ResponseEntity<Object> save(@RequestBody Category category) {
-        Category savedCategory = categoryService.save(category);
+    ResponseEntity<Object> save(@RequestBody CategoryDto categoryDto) {
+        Category category = modelMapper.map(categoryDto, Category.class);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCategory.getId())
+        category = categoryService.save(category);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(category.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(category, CategoryDto.class));
+
     }
 
     @PutMapping("/category/{id}")
-    public ResponseEntity<Object> updateBasket(@PathVariable long id, @RequestBody Category category) {
-        Optional<Category> categoryOptional = categoryService.update(category,id);
+    public ResponseEntity<Object> updateBasket(@PathVariable long id, @RequestBody CategoryDto categoryDto) {
+        Category category = modelMapper.map(categoryDto, Category.class);
+        Optional<Category> categoryOptional = categoryService.update(category, id);
 
         if (!categoryOptional.isPresent()) {
             throw new NotFoundException(messageSource.getMessage("not.found.message", null,
@@ -70,7 +90,8 @@ public class CategoryController {
                 .buildAndExpand(categoryOptional.get().getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(categoryOptional, CategoryDto.class));
     }
 
     @DeleteMapping("/category/{id}")

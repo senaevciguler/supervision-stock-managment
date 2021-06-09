@@ -1,6 +1,9 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiwi.dto.BasketDto;
+import com.kiwi.dto.CategoryDto;
+import com.kiwi.entities.Basket;
 import com.kiwi.entities.Category;
 import com.kiwi.services.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,6 +33,9 @@ class CategoryControllerTest {
 
     @Mock
     CategoryService categoryService;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     CategoryController categoryController;
@@ -88,18 +95,24 @@ class CategoryControllerTest {
     @Test
     void updateCategory() throws Exception {
         //given
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id(1L)
+                .name("test")
+                .build();
+
         Category category = Category.builder()
                 .name("test")
                 .build();
-        given(categoryService.update(category, 1L))
+        given(categoryService.update(any(), anyLong()))
                 .willReturn(Optional.ofNullable(category));
         //when
         mockMvc.perform(put("/api/v1/category/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(category)))
+                .content(om.writeValueAsString(categoryDto)))
                 .andExpect(status().isCreated());
         //then
-        then(categoryService).should().update(category, 1L);
+        then(categoryService).should().update(any(), anyLong());
+
     }
 
     @Test

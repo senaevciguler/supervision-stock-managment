@@ -1,6 +1,7 @@
 package com.kiwi.services.implementation;
 
 import com.kiwi.entities.Basket;
+import com.kiwi.exception.NotFoundException;
 import com.kiwi.repositories.BasketRepository;
 import com.kiwi.services.BasketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,12 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public Basket findById(long id) {
-        return basketRepository.findById(id).get();
+        return basketRepository.findById(id).
+                orElseThrow(() -> new NotFoundException("Product can not find with id :" + id));
     }
 
     @Override
-    public Optional<Basket> update(Basket basket, long id) {
+    public Optional<Basket> update(Basket basket, Long id) {
         return basketRepository.findById(id).map(basketUpdate -> {
             basketUpdate.setQuantity(basket.getQuantity());
 

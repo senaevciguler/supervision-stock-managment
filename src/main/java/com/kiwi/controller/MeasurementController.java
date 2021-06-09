@@ -1,8 +1,12 @@
 package com.kiwi.controller;
 
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.MeasurementDto;
+import com.kiwi.entities.Address;
 import com.kiwi.entities.Measurement;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.MeasurementService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -36,29 +41,42 @@ public class MeasurementController {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/measurement")
-    public List<Measurement> findALl() {
-        return measurementService.findAll();
+    public List<MeasurementDto> findALl() {
+        return measurementService.findAll()
+                .stream()
+                .map(measurement -> modelMapper.map(measurement, MeasurementDto.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/measurement/{id}")
-    public Measurement findById(@PathVariable long id) {
-        return measurementService.findById(id);
+    public MeasurementDto findById(@PathVariable long id) {
+        Measurement measurement = measurementService.findById(id);
+
+        return modelMapper.map(measurement, MeasurementDto.class);
 
     }
 
     @PostMapping("/measurement")
-    ResponseEntity<Object> save(@RequestBody Measurement measurement) {
-        Measurement savedMeasurement = measurementService.save(measurement);
+    ResponseEntity<Object> save(@RequestBody MeasurementDto measurementDto) {
+        Measurement measurement = modelMapper.map(measurementDto, Measurement.class);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedMeasurement.getId())
+        measurement = measurementService.save(measurement);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(measurement.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(measurement, MeasurementDto.class));
     }
 
     @PutMapping("/measurement/{id}")
-    ResponseEntity<Object> update(@RequestBody Measurement measurement, @PathVariable long id) {
+    ResponseEntity<Object> update(@RequestBody MeasurementDto measurementDto, @PathVariable long id) {
+        Measurement measurement = modelMapper.map(measurementDto, Measurement.class);
         Optional<Measurement> measurementOptional = measurementService.update(measurement, id);
 
         if (!measurementOptional.isPresent()) {
@@ -70,7 +88,8 @@ public class MeasurementController {
                 .buildAndExpand(measurementOptional.get().getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location)
+                .body(modelMapper.map(measurementOptional, MeasurementDto.class));
     }
 
     @DeleteMapping("/measurement/{id}")

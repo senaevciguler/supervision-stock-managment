@@ -14,10 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -35,15 +37,8 @@ public class Order {
     @Column(name = "date")
     private Date date;
 
-
-    @ManyToMany
-    @JoinTable(
-            name = "orders_product",
-            joinColumns = @JoinColumn(
-                    name = "orders_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "product_id", referencedColumnName = "id"))
-    private Collection<Product> products;
+    @OneToMany
+    private List<ProductOrder> productOrder;
 
     @OneToOne
     @JoinColumn(name = "basket_id")

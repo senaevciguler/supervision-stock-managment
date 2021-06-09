@@ -1,6 +1,9 @@
 package com.kiwi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiwi.dto.AddressDto;
+import com.kiwi.dto.BasketDto;
+import com.kiwi.entities.Address;
 import com.kiwi.entities.Basket;
 import com.kiwi.services.BasketService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,6 +32,10 @@ class BasketControllerTest {
 
     @Mock
     BasketService basketService;
+
+    @Mock
+    private ModelMapper modelMapper;
+
 
     @InjectMocks
     BasketController basketController;
@@ -70,7 +78,7 @@ class BasketControllerTest {
     @Test
     void save() throws Exception {
         Basket basket = Basket.builder()
-                .id(1L)
+                //.id(1L)
                 .quantity(1L)
                 .build();
         //given
@@ -86,19 +94,26 @@ class BasketControllerTest {
 
     @Test
     void updateBasket() throws Exception {
+
         //given
+        BasketDto basketDto = BasketDto.builder()
+                .id(1L)
+                .quantity(1L)
+                .build();
+
         Basket basket = Basket.builder()
                 .quantity(1L)
                 .build();
-        given(basketService.update(basket, 1L))
+        given(basketService.update(any(), anyLong()))
                 .willReturn(Optional.ofNullable(basket));
         //when
         mockMvc.perform(put("/api/v1/basket/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(basket)))
+                .content(om.writeValueAsString(basketDto)))
                 .andExpect(status().isCreated());
         //then
-        then(basketService).should().update(basket, 1L);
+        then(basketService).should().update(any(), anyLong());
+
     }
 
     @Test

@@ -13,7 +13,7 @@ public interface BasketService {
 
     Basket findById(long id);
 
-    Optional<Basket> update(Basket basket, long id);
+    Optional<Basket> update(Basket basket, Long id);
 
     void delete(long id);
 }
