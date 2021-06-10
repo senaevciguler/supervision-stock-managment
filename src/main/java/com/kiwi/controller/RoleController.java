@@ -1,8 +1,6 @@
 package com.kiwi.controller;
 
-import com.kiwi.dto.AddressDto;
 import com.kiwi.dto.RoleDto;
-import com.kiwi.entities.Address;
 import com.kiwi.entities.Role;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.RoleService;
@@ -56,7 +54,6 @@ public class RoleController {
     @GetMapping("/role/{id}")
     public RoleDto findById(@PathVariable long id) {
         Role role = roleService.findById(id);
-
         return modelMapper.map(role, RoleDto.class);
 
     }

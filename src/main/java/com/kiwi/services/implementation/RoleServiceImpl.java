@@ -1,6 +1,7 @@
 package com.kiwi.services.implementation;
 
 import com.kiwi.entities.Role;
+import com.kiwi.exception.NotFoundException;
 import com.kiwi.repositories.RoleRepository;
 import com.kiwi.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role findById(long id) {
-        return roleRepository.findById(id).get();
+        return roleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Role can not find with id :" + id));
     }
 
     @Override

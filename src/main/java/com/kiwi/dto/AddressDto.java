@@ -12,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressDto {
-
     private Long id;
 
     @NotBlank
@@ -22,9 +21,7 @@ public class AddressDto {
     private String city;
 
     @NotBlank
-
     private String country;
-
     private Integer postalCode;
 
     @NotBlank

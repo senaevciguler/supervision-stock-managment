@@ -37,22 +37,22 @@ public class OrderServiceImpl implements OrderService {
         List<Product> products = productService
                 .findByIds(order.getProductOrder().stream().map(ProductOrder::getProductId).collect(Collectors.toList()));
 
-       for(Product product:products) {
-                ProductOrder productOrder = order.getProductOrder().stream()
-                        .filter(po -> po.getProductId()==product.getId())
-                        .findFirst()
-                        .orElseThrow(() -> new NotFoundException("Product stock not exist"));
+        for (Product product : products) {
+            ProductOrder productOrder = order.getProductOrder().stream()
+                    .filter(po -> po.getProductId().equals(product.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException("Product stock not exist"));
 
-           if(product.getStock().getQuantity().compareTo(productOrder.getCount()) == -1) {
-               throw new NotFoundException("Product stock not exist ");
-           }
+            if (product.getStock().getQuantity().compareTo(productOrder.getCount()) == -1) {
+                throw new NotFoundException("Product stock not exist ");
+            }
 
-                Stock stock = product.getStock();
-                stock.setQuantity(stock.getQuantity()- productOrder.getCount());
-                stockService.update(stock, stock.getId());
-       }
+            Stock stock = product.getStock();
+            stock.setQuantity(stock.getQuantity() - productOrder.getCount());
+            stockService.update(stock, stock.getId());
+        }
 
-       basketService.delete(order.getBasket().getId());
+        basketService.delete(order.getBasket().getId());
 
         return orderRepository.save(order);
     }
@@ -64,7 +64,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findById(long id) {
-        return orderRepository.findById(id).get();
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order can not find with id :" + id));
     }
 
     @Override

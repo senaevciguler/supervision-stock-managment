@@ -33,5 +33,4 @@ public class ProductDto {
     private byte[] photo;
     private Stock stock;
 
-
 }

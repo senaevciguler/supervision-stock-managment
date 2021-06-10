@@ -107,10 +107,10 @@ class ProductServiceTest {
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
         given(productRepository.save(any(Product.class))).willReturn(product);
         //when
-        Optional<Product> savedProduct = service.update( product, anyLong());
+        Optional<Product> savedProduct = service.update(product, anyLong());
         //then
         then(productRepository).should().findById(anyLong());
         then(productRepository).should().save(any(Product.class));
         assertThat(savedProduct).isPresent();
     }
-   }
+}

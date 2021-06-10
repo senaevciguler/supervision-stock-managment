@@ -14,7 +14,6 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StockDto {
-
     private Long id;
 
     @NotBlank

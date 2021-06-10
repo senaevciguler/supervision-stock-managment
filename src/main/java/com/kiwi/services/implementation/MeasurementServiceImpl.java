@@ -1,6 +1,7 @@
 package com.kiwi.services.implementation;
 
 import com.kiwi.entities.Measurement;
+import com.kiwi.exception.NotFoundException;
 import com.kiwi.repositories.MeasurementRepository;
 import com.kiwi.services.MeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class MeasurementServiceImpl implements MeasurementService {
 
     @Override
     public Measurement findById(long id) {
-        return measurementRepository.findById(id).get();
+        return measurementRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Measurement can not find with id :" + id));
     }
 
     @Override

@@ -12,8 +12,8 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BasketDto {
-
     private Long id;
+
     @PositiveOrZero
     private long quantity;
 }

@@ -1,6 +1,7 @@
 package com.kiwi.services.implementation;
 
 import com.kiwi.entities.Stock;
+import com.kiwi.exception.NotFoundException;
 import com.kiwi.repositories.StockRepository;
 import com.kiwi.services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Stock findById(long id) {
-        return stockRepository.findById(id).get();
+        return stockRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException("Stock can not find with id :" + id));
     }
 
     @Override

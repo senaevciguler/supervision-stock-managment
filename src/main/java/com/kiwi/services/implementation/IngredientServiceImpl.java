@@ -1,6 +1,7 @@
 package com.kiwi.services.implementation;
 
 import com.kiwi.entities.Ingredient;
+import com.kiwi.exception.NotFoundException;
 import com.kiwi.repositories.IngredientRepository;
 import com.kiwi.services.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient findById(long id) {
-        return ingredientRepository.findById(id).get();
+        return ingredientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ingredient can not find with id :" + id));
     }
 
     @Override

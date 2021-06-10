@@ -1,6 +1,7 @@
 package com.kiwi.services.implementation;
 
 import com.kiwi.entities.Favourite;
+import com.kiwi.exception.NotFoundException;
 import com.kiwi.repositories.FavouriteRepository;
 import com.kiwi.services.FavouriteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class FavouriteServiceImpl implements FavouriteService {
 
     @Override
     public Favourite findById(long id) {
-        return favouriteRepository.findById(id).get();
+        return favouriteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Favourite can not find with id :" + id));
     }
 
     @Override

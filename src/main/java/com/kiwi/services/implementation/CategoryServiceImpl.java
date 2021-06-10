@@ -1,6 +1,7 @@
 package com.kiwi.services.implementation;
 
 import com.kiwi.entities.Category;
+import com.kiwi.exception.NotFoundException;
 import com.kiwi.repositories.CategoryRepository;
 import com.kiwi.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findById(long id) {
-        return categoryRepository.findById(id).get();
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Category can not find with id :" + id));
     }
 
     @Override

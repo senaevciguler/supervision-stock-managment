@@ -2,7 +2,6 @@ package com.kiwi.controller;
 
 import com.kiwi.dto.AddressDto;
 import com.kiwi.dto.BasketDto;
-import com.kiwi.entities.Address;
 import com.kiwi.entities.Basket;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.BasketService;

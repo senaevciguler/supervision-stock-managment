@@ -63,5 +63,4 @@ public class Product {
 
     @OneToOne
     private Stock stock;
-
 }

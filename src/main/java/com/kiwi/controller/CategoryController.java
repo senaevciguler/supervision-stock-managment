@@ -1,8 +1,6 @@
 package com.kiwi.controller;
 
-import com.kiwi.dto.AddressDto;
 import com.kiwi.dto.CategoryDto;
-import com.kiwi.entities.Address;
 import com.kiwi.entities.Category;
 import com.kiwi.exception.NotFoundException;
 import com.kiwi.services.CategoryService;

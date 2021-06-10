@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
-
     private Long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

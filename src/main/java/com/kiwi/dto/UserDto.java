@@ -11,13 +11,11 @@ import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.List;
 
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
-
     private Long id;
 
     @NotBlank

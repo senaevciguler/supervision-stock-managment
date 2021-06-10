@@ -13,7 +13,6 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StoreDto {
-
     private Long id;
 
     @NotBlank

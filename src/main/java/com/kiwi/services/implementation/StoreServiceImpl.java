@@ -1,6 +1,7 @@
 package com.kiwi.services.implementation;
 
 import com.kiwi.entities.Store;
+import com.kiwi.exception.NotFoundException;
 import com.kiwi.repositories.StoreRepository;
 import com.kiwi.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Store findById(long id) {
-        return storeRepository.findById(id).get();
+        return storeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Store can not find with id :" + id));
     }
 
     @Override

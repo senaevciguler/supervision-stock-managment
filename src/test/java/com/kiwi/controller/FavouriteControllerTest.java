@@ -51,7 +51,7 @@ class FavouriteControllerTest {
     }
 
     @Test
-    void findALl() throws Exception{
+    void findALl() throws Exception {
         //given
         List<Favourite> favourites = List.of(Favourite.builder()
                 .id(1L)
@@ -119,7 +119,7 @@ class FavouriteControllerTest {
     }
 
     @Test
-    void deleteById() throws Exception{
+    void deleteById() throws Exception {
         //when
         mockMvc.perform(delete("/api/v1/favourite/{id}", 1L))
                 .andExpect(status().isOk());

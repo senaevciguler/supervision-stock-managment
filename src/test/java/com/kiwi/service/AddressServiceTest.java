@@ -99,7 +99,7 @@ public class AddressServiceTest {
         given(addressRepository.findById(anyLong())).willReturn(Optional.of(address));
         given(addressRepository.save(any(Address.class))).willReturn(address);
         //when
-        Optional<Address> savedAddress = service.update( address, anyLong());
+        Optional<Address> savedAddress = service.update(address, anyLong());
         //then
         then(addressRepository).should().findById(anyLong());
         then(addressRepository).should().save(any(Address.class));
